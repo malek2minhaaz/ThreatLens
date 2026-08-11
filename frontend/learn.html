@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn · ThreatLens</title>
+  <meta name="description" content="Study real phishing examples and train yourself with the Spot-the-Phish quiz." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="page-head">
+          <p class="eyebrow">🎓 Security training</p>
+          <h2 class="section-title">Learn to Spot Phishing</h2>
+          <p class="section-sub">Study real attack patterns, then test yourself with the quiz.</p>
+        </div>
+
+        <div class="tool-tabs" role="tablist" aria-label="Learn sections">
+          <button class="tool-tab is-active" data-tab="examples" role="tab" aria-selected="true">Example Library</button>
+          <button class="tool-tab" data-tab="quiz" role="tab" aria-selected="false">Spot-the-Phish Quiz</button>
+        </div>
+
+        <div class="tool-panel" id="panel-examples">
+          <div class="learn-grid" id="learnExamples"></div>
+        </div>
+
+        <div class="tool-panel" id="panel-quiz" hidden>
+          <div class="panel quiz-panel" id="quizIntro">
+            <div class="phish-placeholder">
+              <div class="placeholder-icon" aria-hidden="true">🎯</div>
+              <h3>Spot-the-Phish quiz</h3>
+              <p>Each question shows a message. Decide whether it's a phish or legit. You'll get an explanation either way.</p>
+            </div>
+            <button class="btn btn--primary" id="quizStartBtn">Start quiz</button>
+          </div>
+          <div class="panel quiz-panel" id="quizQuestion" hidden>
+            <div class="quiz-progress">
+              <span id="quizCounter">Question 1 / 5</span>
+              <div class="meter meter--sm"><div class="meter__fill" id="quizProgressFill" style="width:0%"></div></div>
+            </div>
+            <div class="quiz-message" id="quizMessage"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <p class="quiz-explanation" id="quizExplanation" hidden></p>
+            <button class="btn btn--primary" id="quizNextBtn" hidden>Next question</button>
+          </div>
+          <div class="panel quiz-panel" id="quizResult" hidden>
+            <div class="quiz-result__score" id="quizResultScore">—</div>
+            <p id="quizResultText" class="muted"></p>
+            <button class="btn btn--primary" id="quizRetryBtn">Try again</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/learn.js" defer></script>
+</body>
+</html>

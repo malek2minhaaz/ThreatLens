@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account · ThreatLens</title>
+  <meta name="description" content="Create a ThreatLens account to store your scans and analyses." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page auth-wrap">
+      <div class="auth-card panel">
+        <div class="auth-card__brand">
+          <span class="brand__shield" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <h1 class="auth-card__title">Create your account</h1>
+          <p class="auth-card__sub">Join ThreatLens — your scans & history are stored per account.</p>
+        </div>
+        <form id="registerForm" class="form" autocomplete="on">
+          <div class="field">
+            <label class="field-label" for="regUsername">Username</label>
+            <input id="regUsername" class="input" type="text" placeholder="alex" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" title="Letters, numbers and underscores only" required />
+          </div>
+          <div class="field">
+            <label class="field-label" for="regEmail">Email</label>
+            <input id="regEmail" class="input" type="email" placeholder="alex@mail.com" required />
+          </div>
+          <div class="field">
+            <label class="field-label" for="regPassword">Password <span class="muted">(min 8 chars)</span></label>
+            <input id="regPassword" class="input" type="password" placeholder="••••••••" minlength="8" required />
+          </div>
+          <div class="field">
+            <label class="field-label" for="regPassword2">Confirm password</label>
+            <input id="regPassword2" class="input" type="password" placeholder="••••••••" minlength="8" required />
+          </div>
+          <button class="btn btn--primary btn--block" type="submit" id="registerBtn">
+            <span class="btn__label">Create Account</span>
+            <span class="btn__spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+        <p class="auth-card__switch">Already registered? <a href="login.html">Sign in</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/auth.js" defer></script>
+</body>
+</html>

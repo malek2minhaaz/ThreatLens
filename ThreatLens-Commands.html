@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ThreatLens — Command Reference</title>
+<style>
+  @page {
+    size: A4;
+    margin: 14mm 13mm 16mm 13mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    font-size: 10.5pt;
+    color: #1b2430;
+    background: #ffffff;
+    line-height: 1.45;
+  }
+  /* ---------- Header ---------- */
+  .hero {
+    background: linear-gradient(135deg, #0b1220 0%, #12223d 60%, #0e3a5f 100%);
+    color: #fff;
+    border-radius: 10px;
+    padding: 22px 26px 18px 26px;
+    margin-bottom: 16px;
+  }
+  .hero h1 { font-size: 21pt; letter-spacing: .5px; margin-bottom: 4px; }
+  .hero h1 span { color: #4cc9f0; }
+  .hero p { color: #b8c7dd; font-size: 10pt; }
+  .hero .badges { margin-top: 10px; }
+  .badge {
+    display: inline-block;
+    background: rgba(76,201,240,.14);
+    border: 1px solid rgba(76,201,240,.45);
+    color: #7dd8f5;
+    font-size: 8pt;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-right: 6px;
+  }
+  /* ---------- Sections ---------- */
+  h2 {
+    font-size: 12.5pt;
+    color: #0e3a5f;
+    border-bottom: 2px solid #4cc9f0;
+    padding-bottom: 3px;
+    margin: 18px 0 9px 0;
+  }
+  h2 .num {
+    display: inline-block;
+    background: #0e3a5f;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 9.5pt;
+    padding: 1px 7px;
+    margin-right: 7px;
+    vertical-align: 1px;
+  }
+  h3 {
+    font-size: 10.5pt;
+    color: #12223d;
+    margin: 10px 0 4px 0;
+  }
+  p { margin: 4px 0; }
+  ul { margin: 4px 0 6px 18px; }
+  li { margin: 2px 0; }
+  a { color: #0e6aa8; text-decoration: none; }
+  .note {
+    background: #eef7fd;
+    border-left: 4px solid #4cc9f0;
+    border-radius: 4px;
+    padding: 7px 11px;
+    margin: 8px 0;
+    font-size: 9.5pt;
+  }
+  .note.warn { background: #fdf3e7; border-left-color: #f0a04c; }
+  .note.green { background: #edf8ef; border-left-color: #4caf7d; }
+  .note strong { color: #0e3a5f; }
+  /* ---------- Code blocks ---------- */
+  pre {
+    background: #0d1526;
+    color: #d7e3f4;
+    font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    font-size: 9pt;
+    border-radius: 6px;
+    padding: 9px 12px;
+    margin: 6px 0 10px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    page-break-inside: avoid;
+  }
+  pre .c  { color: #6b7f9e; font-style: italic; }   /* comment */
+  pre .v  { color: #ffd479; }                        /* variable/placeholder */
+  pre .ok { color: #4caf7d; }
+  code {
+    font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    font-size: 9pt;
+    background: #eef2f8;
+    color: #12335c;
+    border-radius: 3px;
+    padding: 1px 4px;
+  }
+  /* ---------- Tables ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.2pt;
+    margin: 6px 0 10px 0;
+  }
+  th {
+    background: #0e3a5f;
+    color: #fff;
+    text-align: left;
+    padding: 5px 8px;
+    font-weight: 600;
+  }
+  td {
+    border: 1px solid #d4dde8;
+    padding: 4px 8px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f6f9fc; }
+  /* ---------- Footer ---------- */
+  .footer {
+    margin-top: 18px;
+    padding-top: 8px;
+    border-top: 1px solid #d4dde8;
+    font-size: 8.5pt;
+    color: #7c8aa0;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🛡️ Threat<span>Lens</span> — Command Reference</h1>
+  <p>Threat Detection &amp; URL Scanner · FastAPI + SQLite + Vanilla JS dashboard</p>
+  <div class="badges">
+    <span class="badge">Python 3.11+</span>
+    <span class="badge">FastAPI · Uvicorn</span>
+    <span class="badge">SQLite</span>
+    <span class="badge">Works with zero API keys</span>
+  </div>
+</div>
+
+<h2><span class="num">1</span>Quick Start (already set up)</h2>
+<p>Your environment is ready: <code>backend/.venv</code> exists with all dependencies and the
+database is created automatically on first run.</p>
+<pre><span class="c"># From the project root — Git Bash on Windows</span>
+cd backend
+source .venv/Scripts/activate
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload</pre>
+
+<h2><span class="num">2</span>One-Liner (no venv activation)</h2>
+<pre>cd backend
+.venv/Scripts/python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload</pre>
+
+<h2><span class="num">3</span>Fresh Setup From Scratch</h2>
+<pre><span class="c"># 1. Create &amp; activate a virtual environment</span>
+cd backend
+python -m venv .venv
+source .venv/Scripts/activate        <span class="c"># PowerShell: .venv\Scripts\Activate.ps1</span>
+
+<span class="c"># 2. Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="c"># 3. (Optional) configure threat-intel keys</span>
+cp .env.example .env
+
+<span class="c"># 4. Run the server</span>
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload</pre>
+
+<h2><span class="num">4</span>Optional: Threat-Intel API Keys</h2>
+<p>ThreatLens works with <strong>zero API keys</strong>. Add any of the following to
+<code>backend/.env</code> to enrich scan results (all providers degrade gracefully):</p>
+<pre><span class="v">VIRUSTOTAL_API_KEY</span>=your_key_here
+<span class="v">GOOGLE_SAFE_BROWSING_API_KEY</span>=your_key_here
+<span class="v">PHISHTANK_API_KEY</span>=your_key_here
+<span class="v">ADMIN_USERNAME</span>=alex            <span class="c"># auto-promotes this user to admin on startup</span></pre>
+<p class="note">The frontend is served automatically by the backend at <code>/</code> —
+there is <strong>no separate frontend command</strong>.</p>
+
+<h2><span class="num">5</span>Where to Look After Starting</h2>
+<table>
+  <tr><th>URL</th><th>What it is</th></tr>
+  <tr><td><code>http://localhost:8000</code></td><td>Dashboard — register an account, then use the scanner, phishing lab, history, intel &amp; profile pages</td></tr>
+  <tr><td><code>http://localhost:8000/api/docs</code></td><td>Interactive API docs (Swagger) — add a bearer token via <em>Authorize</em></td></tr>
+  <tr><td><code>http://localhost:8000/api/health</code></td><td>Service health check → <code>{"status": "ok", ...}</code></td></tr>
+</table>
+
+<h3>Built-in admin account</h3>
+<table>
+  <tr><th>Username</th><th>Password</th><th>Role</th></tr>
+  <tr><td><code>admin024</code></td><td><code>admin2412</code></td><td>Admin — redirected to the admin panel after login</td></tr>
+</table>
+
+<h2><span class="num">6</span>API Examples (curl)</h2>
+<h3>Register &amp; login</h3>
+<pre>curl -X POST http://localhost:8000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alex", "email": "alex@mail.com", "password": "ThreatLens!2026"}'
+
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"identifier": "alex", "password": "ThreatLens!2026"}'</pre>
+
+<h3>Scan a URL (uses the token from login)</h3>
+<pre>curl -X POST http://localhost:8000/api/scan-url \
+  -H "Authorization: Bearer <span class="v">&lt;token&gt;</span>" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://paypal-account-verify.tk/login"}'
+
+<span class="c"># Analyze phishing content</span>
+curl -X POST http://localhost:8000/api/analyze-phishing \
+  -H "Authorization: Bearer <span class="v">&lt;token&gt;</span>" \
+  -H "Content-Type: application/json" \
+  -d '{"content_type": "email", "content": "URGENT: your account will be closed..."}'</pre>
+
+<h2><span class="num">7</span>Other Useful Commands</h2>
+<h3>Test suite</h3>
+<pre>cd backend
+.venv/Scripts/python.exe test_e2e.py</pre>
+
+<h3>Stop / restart</h3>
+<pre>Ctrl+C            <span class="c"># stop the running server in the terminal</span>
+uvicorn app.main:app --reload   <span class="c"># start again (change is picked up automatically)</span></pre>
+
+<h3>Docker (optional deployment)</h3>
+<pre>docker build -t threatlens .
+docker run -p 8000:8000 threatlens</pre>
+
+<h2><span class="num">8</span>Production Notes</h2>
+<ul>
+  <li><strong>Workers:</strong> <code>uvicorn app.main:app --workers 4</code></li>
+  <li><strong>CORS:</strong> tighten <code>allow_origins=["*"]</code> in <code>backend/app/main.py</code></li>
+  <li><strong>Database:</strong> swap to Postgres via <code>DATABASE_URL</code> in <code>.env</code> — no code changes needed</li>
+  <li><strong>Run behind a reverse proxy</strong> (nginx/Caddy) with TLS termination</li>
+</ul>
+
+<div class="footer">
+  ThreatLens project — command reference · Generated August 2026
+</div>
+
+</body>
+</html>

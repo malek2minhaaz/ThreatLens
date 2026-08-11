@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Scanner · ThreatLens</title>
+  <meta name="description" content="Scan URLs for heuristics, WHOIS, SSL, redirects and threat intelligence with a unified 0-100 risk score." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="hero hero--compact">
+          <p class="eyebrow">⚡ Heuristics · WHOIS · SSL · Redirects · Threat intel</p>
+          <h1 class="hero__title">Is that link <span class="grad-text">safe</span> to click?</h1>
+          <p class="hero__subtitle">
+            ThreatLens dissects URLs for typosquatting, suspicious TLDs, domain age,
+            TLS validity and redirect chains — then produces a unified 0–100 risk score.
+          </p>
+          <form id="scanForm" class="scan-form" autocomplete="off">
+            <div class="scan-form__bar">
+              <span class="scan-form__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+              </span>
+              <input id="urlInput" class="scan-form__input" type="text"
+                placeholder="Enter a URL to scan… e.g. https://secure-paypal-login.xyz"
+                spellcheck="false" aria-label="URL to scan" />
+              <button id="scanBtn" class="btn btn--primary" type="submit">
+                <span class="btn__label">Scan URL</span>
+                <span class="btn__spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="scan-form__samples">
+              <span class="scan-form__hint">Try a sample:</span>
+              <button type="button" class="chip" data-sample="https://google.com">Safe URL</button>
+              <button type="button" class="chip" data-sample="http://paypal-account-verify.tk/login">Typosquat .tk</button>
+              <button type="button" class="chip" data-sample="https://secure-bank-of-america-login.xyz/verify?redirect=phish">Suspicious</button>
+              <button type="button" class="chip" data-sample="http://192.168.1.10:8080/billing">IP-based</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Scan results -->
+        <div id="scanPlaceholder" class="panel panel--placeholder">
+          <div class="placeholder-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/>
+              <path d="M9.5 12.5l2 2 3.5-4"/>
+            </svg>
+          </div>
+          <h3>Awaiting your first scan</h3>
+          <p>Paste a URL above and hit <strong>Scan URL</strong>. You'll get heuristics, WHOIS/SSL/HTTP metadata, threat-intel verdicts and an itemized risk breakdown.</p>
+        </div>
+
+        <div id="scanLoading" class="panel panel--loading" hidden>
+          <div class="radar" aria-hidden="true">
+            <div class="radar__ring radar__ring--1"></div>
+            <div class="radar__ring radar__ring--2"></div>
+            <div class="radar__ring radar__ring--3"></div>
+            <div class="radar__core"></div>
+          </div>
+          <h3>Analyzing <span id="loadingUrl" class="mono">…</span></h3>
+          <ul class="pipeline">
+            <li id="pipe-heuristics"><span class="pipeline__dot"></span>Heuristic analysis</li>
+            <li id="pipe-metadata"><span class="pipeline__dot"></span>Metadata inspection (WHOIS · SSL · HTTP)</li>
+            <li id="pipe-intel"><span class="pipeline__dot"></span>Threat intelligence feeds</li>
+            <li id="pipe-score"><span class="pipeline__dot"></span>Computing risk score</li>
+          </ul>
+        </div>
+
+        <div id="scanReport" hidden>
+          <div class="report-hero">
+            <div class="report-hero__score">
+              <div class="gauge" id="gauge">
+                <svg viewBox="0 0 200 200">
+                  <defs>
+                    <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#22d3ee"/>
+                      <stop offset="50%" stop-color="#a3e635"/>
+                      <stop offset="100%" stop-color="#34d399"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="gauge__track" cx="100" cy="100" r="86"/>
+                  <circle class="gauge__bar" id="gaugeBar" cx="100" cy="100" r="86"/>
+                </svg>
+                <div class="gauge__center">
+                  <span class="gauge__value" id="gaugeValue">—</span>
+                  <span class="gauge__unit">/ 100 · safe</span>
+                </div>
+              </div>
+              <div class="report-hero__verdict">
+                <span class="verdict-badge" id="verdictBadge">—</span>
+                <span class="report-hero__risk" id="riskLevelText"></span>
+              </div>
+            </div>
+            <div class="report-hero__meta">
+              <div class="report-hero__url">
+                <span class="label">Scanned URL</span>
+                <code class="mono" id="reportUrl">—</code>
+              </div>
+              <div class="stat-grid">
+                <div class="stat"><span class="stat__label">Domain age</span><span class="stat__value" id="statAge">—</span></div>
+                <div class="stat"><span class="stat__label">TLS cert</span><span class="stat__value" id="statSsl">—</span></div>
+                <div class="stat"><span class="stat__label">HTTP status</span><span class="stat__value" id="statHttp">—</span></div>
+                <div class="stat"><span class="stat__label">AV engines</span><span class="stat__value" id="statAv">—</span></div>
+                <div class="stat"><span class="stat__label">Redirects</span><span class="stat__value" id="statRedirects">—</span></div>
+                <div class="stat"><span class="stat__label">Scan time</span><span class="stat__value" id="statTime">—</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="tabs" role="tablist" aria-label="Report sections">
+              <button class="tab is-active" role="tab" aria-selected="true" data-tab="breakdown">Risk Breakdown <span class="tab__count" id="tabCountBreakdown">0</span></button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="heuristics">Heuristics <span class="tab__count" id="tabCountHeuristics">0</span></button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="metadata">Metadata</button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="raw">Raw Report</button>
+            </div>
+            <div class="tab-panel is-active" id="tab-breakdown" role="tabpanel">
+              <div class="breakdown-cats" id="breakdownCats"></div>
+              <div class="findings" id="findingsList"></div>
+            </div>
+            <div class="tab-panel" id="tab-heuristics" role="tabpanel" hidden>
+              <div id="heuristicsList" class="findings"></div>
+            </div>
+            <div class="tab-panel" id="tab-metadata" role="tabpanel" hidden>
+              <div id="metadataPanel"></div>
+            </div>
+            <div class="tab-panel" id="tab-raw" role="tabpanel" hidden>
+              <div class="raw-toolbar">
+                <button class="btn btn--ghost" id="copyJson">Copy JSON</button>
+                <a class="btn btn--ghost" id="downloadJson" download="threatlens-report.json">Download</a>
+              </div>
+              <pre class="raw-json" id="rawJson"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/scanner.js" defer></script>
+</body>
+</html>

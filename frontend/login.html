@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In · ThreatLens</title>
+  <meta name="description" content="Sign in to ThreatLens to scan URLs and analyze phishing content." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page auth-wrap">
+      <div class="auth-card panel">
+        <div class="auth-card__brand">
+          <span class="brand__shield" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <h1 class="auth-card__title">Welcome back</h1>
+          <p class="auth-card__sub">Sign in to scan URLs and analyze phishing content.</p>
+        </div>
+        <form id="loginForm" class="form" autocomplete="on">
+          <div class="field">
+            <label class="field-label" for="loginIdentifier">Username or email</label>
+            <input id="loginIdentifier" class="input" type="text" placeholder="alex / alex@mail.com" required />
+          </div>
+          <div class="field">
+            <label class="field-label" for="loginPassword">Password</label>
+            <input id="loginPassword" class="input" type="password" placeholder="••••••••" required />
+          </div>
+          <button class="btn btn--primary btn--block" type="submit" id="loginBtn">
+            <span class="btn__label">Sign In</span>
+            <span class="btn__spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+        <p class="auth-card__switch">New to ThreatLens? <a href="register.html">Create an account</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/auth.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phishing Lab · ThreatLens</title>
+  <meta name="description" content="Phishing toolkit: content analyzer, link inspector, email header analyzer, sender domain check and watchlist." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="page-head">
+          <p class="eyebrow">🧠 Phishing toolkit</p>
+          <h2 class="section-title">Phishing Lab</h2>
+          <p class="section-sub">Five tools to investigate suspicious emails, SMS and senders — powered by the rule-based engine and the URL scanner.</p>
+        </div>
+
+        <div class="tool-tabs" role="tablist" aria-label="Phishing tools">
+          <button class="tool-tab is-active" data-tab="analyzer" role="tab" aria-selected="true">Content Analyzer</button>
+          <button class="tool-tab" data-tab="inspector" role="tab" aria-selected="false">Link Inspector</button>
+          <button class="tool-tab" data-tab="headers" role="tab" aria-selected="false">Email Headers</button>
+          <button class="tool-tab" data-tab="sender" role="tab" aria-selected="false">Sender Check</button>
+          <button class="tool-tab" data-tab="watchlist" role="tab" aria-selected="false">Watchlist</button>
+        </div>
+
+        <!-- ============ Content Analyzer ============ -->
+        <div class="tool-panel" id="panel-analyzer">
+          <div class="phishing-grid">
+            <div class="panel">
+              <form id="phishForm">
+                <div class="field-row">
+                  <label class="field-label" for="contentType">Content type</label>
+                  <select id="contentType" class="select">
+                    <option value="email">Email body</option>
+                    <option value="sms">SMS / text message</option>
+                    <option value="page_text">Web page text</option>
+                  </select>
+                </div>
+                <label class="field-label" for="phishInput">Content to analyze</label>
+                <textarea id="phishInput" class="textarea" rows="10"
+                  placeholder="Paste the suspicious email / SMS / page text here…"></textarea>
+                <div class="phish-actions">
+                  <button class="btn btn--primary" type="submit" id="phishBtn">
+                    <span class="btn__label">Analyze Content</span>
+                    <span class="btn__spinner" aria-hidden="true"></span>
+                  </button>
+                  <button class="btn btn--ghost" type="button" id="loadSample">Load sample phishing email</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel" id="phishResultPanel">
+              <div id="phishPlaceholder" class="phish-placeholder">
+                <div class="placeholder-icon" aria-hidden="true">✉️</div>
+                <h3>No analysis yet</h3>
+                <p>Analyzed content will appear here with a likelihood meter and itemized flags.</p>
+              </div>
+              <div id="phishResult" hidden>
+                <div class="phish-meter">
+                  <div class="phish-meter__head">
+                    <span class="field-label">Phishing likelihood</span>
+                    <span class="verdict-badge" id="phishVerdict">—</span>
+                  </div>
+                  <div class="meter">
+                    <div class="meter__fill" id="phishMeterFill" style="width:0%"></div>
+                  </div>
+                  <div class="phish-meter__foot">
+                    <span class="mono" id="phishScore">0 / 100</span>
+                    <span id="phishConfidence" class="muted">confidence: —</span>
+                  </div>
+                </div>
+                <div class="findings" id="phishFlags"></div>
+                <div class="watch-match" id="phishWatchMatches" hidden></div>
+                <details class="accordion">
+                  <summary>Matched keywords & stats</summary>
+                  <div id="phishDetails" class="accordion-body"></div>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Link Inspector ============ -->
+        <div class="tool-panel" id="panel-inspector" hidden>
+          <div class="phishing-grid">
+            <div class="panel">
+              <form id="inspectForm">
+                <label class="field-label" for="inspectInput">Paste the suspicious email / SMS</label>
+                <textarea id="inspectInput" class="textarea" rows="10"
+                  placeholder="Paste the message — every link inside will be scanned with the full URL scanner…"></textarea>
+                <p class="result-meta">Each embedded link is scanned end-to-end (heuristics + WHOIS + SSL + threat intel). Up to 8 links, scanned in parallel.</p>
+                <button class="btn btn--primary" type="submit" id="inspectBtn">
+                  <span class="btn__label">Inspect &amp; Scan All Links</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+
+            <div class="panel" id="inspectResultPanel">
+              <div id="inspectPlaceholder" class="phish-placeholder">
+                <div class="placeholder-icon" aria-hidden="true">🔗</div>
+                <h3>No inspection yet</h3>
+                <p>The message score appears here, and every embedded link gets its own scan card.</p>
+              </div>
+              <div id="inspectResult" hidden>
+                <div class="phish-meter">
+                  <div class="phish-meter__head">
+                    <span class="field-label">Message phishing likelihood</span>
+                    <span class="verdict-badge" id="inspectVerdict">—</span>
+                  </div>
+                  <div class="meter"><div class="meter__fill" id="inspectMeterFill" style="width:0%"></div></div>
+                  <div class="phish-meter__foot">
+                    <span class="mono" id="inspectScore">0 / 100</span>
+                    <span id="inspectScanned" class="muted">0 links scanned</span>
+                  </div>
+                </div>
+                <div class="watch-match" id="inspectWatchMatches" hidden></div>
+                <h3 class="panel-title" style="margin-top:18px">Link scan results</h3>
+                <div id="inspectLinks" class="inspector-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Email Headers ============ -->
+        <div class="tool-panel" id="panel-headers" hidden>
+          <div class="phishing-grid">
+            <div class="panel">
+              <form id="headersForm">
+                <label class="field-label" for="headersInput">Paste raw email headers</label>
+                <textarea id="headersInput" class="textarea" rows="10"
+                  placeholder="From: …&#10;Reply-To: …&#10;Return-Path: …&#10;Received: …&#10;Authentication-Results: …"></textarea>
+                <p class="result-meta">Checks From/Reply-To/Return-Path mismatches, relay chains, SPF/DKIM/DMARC results and IDN tricks.</p>
+                <button class="btn btn--primary" type="submit" id="headersBtn">
+                  <span class="btn__label">Analyze Headers</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+
+            <div class="panel" id="headersResultPanel">
+              <div id="headersPlaceholder" class="phish-placeholder">
+                <div class="placeholder-icon" aria-hidden="true">📧</div>
+                <h3>No headers yet</h3>
+                <p>Parsed header values and spoofing flags will appear here.</p>
+              </div>
+              <div id="headersResult" hidden>
+                <div class="phish-meter">
+                  <div class="phish-meter__head">
+                    <span class="field-label">Spoofing score</span>
+                    <span class="verdict-badge" id="headersVerdict">—</span>
+                  </div>
+                  <div class="meter"><div class="meter__fill" id="headersMeterFill" style="width:0%"></div></div>
+                  <div class="phish-meter__foot">
+                    <span class="mono" id="headersScore">0 / 100</span>
+                    <span id="headersConfidence" class="muted">confidence: —</span>
+                  </div>
+                </div>
+                <div class="header-table" id="headersParsed"></div>
+                <div class="findings" id="headersFlags"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Sender Check ============ -->
+        <div class="tool-panel" id="panel-sender" hidden>
+          <div class="phishing-grid">
+            <div class="panel">
+              <form id="senderForm">
+                <label class="field-label" for="senderInput">Sender email or domain</label>
+                <input id="senderInput" class="input" type="text"
+                  placeholder="e.g. security@paypal-verify.tk or paypal-verify.tk" />
+                <p class="result-meta">Runs typosquatting, TLD, entropy and structural checks on the sender's domain, plus WHOIS domain age.</p>
+                <button class="btn btn--primary" type="submit" id="senderBtn">
+                  <span class="btn__label">Check Sender Domain</span>
+                  <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+
+            <div class="panel" id="senderResultPanel">
+              <div id="senderPlaceholder" class="phish-placeholder">
+                <div class="placeholder-icon" aria-hidden="true">🌐</div>
+                <h3>No sender checked yet</h3>
+                <p>The domain risk score and findings will appear here.</p>
+              </div>
+              <div id="senderResult" hidden>
+                <div class="phish-meter">
+                  <div class="phish-meter__head">
+                    <span class="field-label"><span id="senderDomain" class="mono">—</span></span>
+                    <span class="verdict-badge" id="senderVerdict">—</span>
+                  </div>
+                  <div class="meter"><div class="meter__fill" id="senderMeterFill" style="width:0%"></div></div>
+                  <div class="phish-meter__foot">
+                    <span class="mono" id="senderScore">0 / 100</span>
+                    <span id="senderWhois" class="muted"></span>
+                  </div>
+                </div>
+                <div class="watch-match" id="senderWatchMatches" hidden></div>
+                <div class="findings" id="senderFindings"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ Watchlist ============ -->
+        <div class="tool-panel" id="panel-watchlist" hidden>
+          <div class="panel">
+            <h3 class="panel-title">Phishing watchlist</h3>
+            <p class="result-meta">Save sender emails, domains or URLs you've flagged. When they appear in an analysis, inspector run or sender check, ThreatLens warns you immediately.</p>
+            <form id="watchForm" class="form form--row" style="align-items:flex-end">
+              <div class="field">
+                <label class="field-label" for="watchKind">Type</label>
+                <select id="watchKind" class="select">
+                  <option value="domain">Domain</option>
+                  <option value="sender">Sender email</option>
+                  <option value="url">URL</option>
+                </select>
+              </div>
+              <div class="field" style="flex:2 1 220px">
+                <label class="field-label" for="watchValue">Value</label>
+                <input id="watchValue" class="input" type="text" placeholder="e.g. paypal-verify.tk" required />
+              </div>
+              <div class="field" style="flex:2 1 220px">
+                <label class="field-label" for="watchNote">Note <span class="muted">(optional)</span></label>
+                <input id="watchNote" class="input" type="text" placeholder="seen in a fake invoice email" />
+              </div>
+              <button class="btn btn--primary" type="submit" id="watchAddBtn">Add to watchlist</button>
+            </form>
+            <div id="watchList" class="watch-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/phishing.js" defer></script>
+  <script src="/static/js/pages/phishing-tools.js" defer></script>
+</body>
+</html>

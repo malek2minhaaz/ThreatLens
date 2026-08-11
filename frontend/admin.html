@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel · ThreatLens</title>
+  <meta name="description" content="Platform-wide administration: users, scans and threat-intel providers." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="page-head">
+          <p class="eyebrow">👑 Admin console</p>
+          <h2 class="section-title">Admin Panel</h2>
+          <p class="section-sub">Platform-wide overview: users, scans, detections and threat-intel providers.</p>
+        </div>
+
+        <div class="stat-tiles admin-stats" id="adminStats"></div>
+
+        <div class="admin-grid">
+          <div class="panel">
+            <h3 class="panel-title">Verdict distribution</h3>
+            <div id="adminDist" class="dist-list"></div>
+          </div>
+          <div class="panel">
+            <h3 class="panel-title">Threat-intel providers</h3>
+            <div class="intel-status-grid admin-providers" id="adminProviders"></div>
+          </div>
+        </div>
+
+        <div class="panel admin-users-panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Users</h3>
+              <p class="result-meta" id="adminUsersMeta"></p>
+            </div>
+            <div class="search-box admin-search">
+              <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <input id="adminUserSearch" class="search-input" type="search" placeholder="Search users…" aria-label="Search users" autocomplete="off" />
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User</th><th>Email</th><th>Scans</th><th>Phish</th><th>Joined</th><th>Last scan</th><th>Role</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersBody">
+                <tr><td colspan="8" class="table-empty">Loading users…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Recent scans — all users</h3>
+              <p class="result-meta" id="adminScansMeta"></p>
+            </div>
+            <button class="btn btn--ghost" id="adminRefresh" title="Refresh the panel">
+              <svg id="adminRefreshIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
+                <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>#</th><th>User</th><th>URL</th><th>Score</th><th>Verdict</th><th>Time</th></tr>
+              </thead>
+              <tbody id="adminScansBody">
+                <tr><td colspan="6" class="table-empty">Loading scans…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threat Intelligence · ThreatLens</title>
+  <meta name="description" content="Live threat-intel verdicts aggregated from VirusTotal, Google Safe Browsing and PhishTank." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="page-head">
+          <p class="eyebrow">🌐 VirusTotal · Google Safe Browsing · PhishTank</p>
+          <h2 class="section-title">Threat Intelligence</h2>
+          <p class="section-sub">Live verdicts from your scans, aggregated from the configured external feeds. Configure API keys in <code class="mono">backend/.env</code> to activate providers.</p>
+        </div>
+
+        <div class="intel-status-grid" id="intelProviders"></div>
+
+        <div class="panel summary-banner" id="intelSummary"></div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Recent intel verdicts</h3>
+              <p class="result-meta" id="intelUpdated"></p>
+            </div>
+            <button class="btn btn--ghost" id="intelRefresh" title="Refresh the feed">
+              <svg id="refreshIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px">
+                <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+
+          <div class="toolbar">
+            <div class="filter-chips" id="detectionChips" role="group" aria-label="Filter by detection"></div>
+          </div>
+
+          <div class="card-grid" id="intelFeed"></div>
+
+          <div class="empty-state" id="intelEmpty" hidden>
+            <div class="empty-state__icon">🛰️</div>
+            <h3>No intel verdicts yet</h3>
+            <p>Run a URL scan to populate the threat-intel feed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/intel.js" defer></script>
+</body>
+</html>

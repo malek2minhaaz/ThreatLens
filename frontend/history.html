@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History · ThreatLens</title>
+  <meta name="description" content="Browse your stored URL scans and phishing analyses as cards with live search and filters." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <main>
+    <section class="page">
+      <div class="container">
+        <div class="page-head">
+          <p class="eyebrow">🗄️ SQLite-backed log</p>
+          <h2 class="section-title">Scan & Analysis History</h2>
+          <p class="section-sub">Every scan and phishing analysis is stored per account. Search, filter and click a card to reopen the full report.</p>
+        </div>
+
+        <div class="stat-tiles history-stats" id="historyStats"></div>
+
+        <div class="panel">
+          <div class="tabs" role="tablist" aria-label="History type">
+            <button class="tab is-active" data-history-tab="scans">URL Scans</button>
+            <button class="tab" data-history-tab="phishing">Phishing Analyses</button>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-box">
+              <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <input id="historySearch" class="search-input" type="search"
+                placeholder="Search URLs, previews, verdicts…" aria-label="Search history" autocomplete="off" />
+            </div>
+            <div class="filter-chips" id="verdictChips" role="group" aria-label="Filter by verdict"></div>
+            <select id="historySort" class="select select--sm" aria-label="Sort history">
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="risk-high">Highest risk</option>
+              <option value="risk-low">Lowest risk</option>
+            </select>
+          </div>
+
+          <p class="result-meta" id="resultMeta"></p>
+          <div class="card-grid" id="historyCards"></div>
+
+          <div class="empty-state" id="historyEmpty" hidden>
+            <div class="empty-state__icon">🔍</div>
+            <h3 id="emptyTitle">No scans yet</h3>
+            <p id="emptyBody">Run your first scan in the URL Scanner.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js" defer></script>
+  <script src="/static/js/pages/history.js" defer></script>
+</body>
+</html>

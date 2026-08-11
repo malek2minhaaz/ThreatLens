@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ThreatLens — Threat Detection & URL Scanner</title>
+  <meta name="description" content="Scan URLs, analyze phishing content, and get unified risk scoring. Know if that link is safe before you click." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <!-- Ambient background -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
+
+  <!-- Floating particles -->
+  <div class="particles" aria-hidden="true">
+    <span style="left:8%; width:5px; height:5px; animation-duration:11s; animation-delay:0s;"></span>
+    <span style="left:18%; width:3px; height:3px; animation-duration:14s; animation-delay:2s;"></span>
+    <span style="left:29%; width:6px; height:6px; animation-duration:12s; animation-delay:4s;"></span>
+    <span style="left:42%; width:4px; height:4px; animation-duration:16s; animation-delay:1s;"></span>
+    <span style="left:55%; width:5px; height:5px; animation-duration:10s; animation-delay:3s;"></span>
+    <span style="left:66%; width:3px; height:3px; animation-duration:15s; animation-delay:0.5s;"></span>
+    <span style="left:74%; width:6px; height:6px; animation-duration:13s; animation-delay:2.5s;"></span>
+    <span style="left:85%; width:4px; height:4px; animation-duration:11s; animation-delay:5s;"></span>
+    <span style="left:93%; width:5px; height:5px; animation-duration:17s; animation-delay:1.5s;"></span>
+  </div>
+
+  <!-- Landing header -->
+  <header class="landing-header">
+    <div class="container landing-header__inner">
+      <a class="brand" href="index.html" aria-label="ThreatLens home">
+        <span class="brand__shield" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <span class="brand__name">Threat<span class="brand__accent">Lens</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" title="Switch theme" aria-label="Switch between light and dark theme"></button>
+    </div>
+  </header>
+
+  <main class="landing">
+    <!-- ======================= HERO ======================= -->
+    <section class="landing-hero container">
+      <div class="landing-hero__text">
+        <span class="eyebrow landing-hero__eyebrow">⚡ URL Scanner · Phishing Lab · Threat Intel</span>
+        <h1 class="landing-hero__title">Know if that link is <span class="grad-text">safe</span> before you click</h1>
+        <p class="landing-hero__sub">
+          ThreatLens dissects URLs and messages for typosquatting, suspicious TLDs, TLS validity,
+          phishing tactics and live threat-intel verdicts — then gives you one clear 0–100 risk score.
+        </p>
+        <div class="landing-hero__cta">
+          <a class="btn btn--primary btn--lg" href="login.html">Sign In</a>
+          <a class="btn btn--ghost btn--lg" href="register.html">Sign Up now</a>
+        </div>
+        <div class="landing-hero__authed" id="dashboardCta" hidden>
+          <a class="btn btn--primary btn--lg" href="scanner.html">Open Dashboard</a>
+        </div>
+        <p class="landing-hero__meta mono muted">Free forever · No credit card required · Your scans stay in your account</p>
+      </div>
+
+      <div class="landing-hero__visual" aria-hidden="true">
+        <div class="hero-orbit">
+          <span class="hero-orbit__ring"></span>
+          <span class="hero-orbit__ring hero-orbit__ring--2"></span>
+          <span class="hero-orbit__ring hero-orbit__ring--3"></span>
+          <div class="hero-orbit__core">
+            <span class="brand__shield hero-orbit__shield">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5l8-3z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="scan-demo panel">
+          <div class="scan-demo__bar">
+            <span class="scan-demo__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+            </span>
+            <span class="scan-demo__url mono">https://secure-paypal-login.xyz</span>
+          </div>
+          <div class="scan-demo__progress"><span class="scan-demo__fill"></span></div>
+          <div class="scan-demo__result">
+            <span class="verdict-badge verdict-badge--sm v-danger">DANGEROUS</span>
+            <span class="scan-demo__score mono">Risk score 12 / 100</span>
+          </div>
+          <div class="scan-demo__flags">
+            <span class="mini-chip">Typosquatting</span>
+            <span class="mini-chip">Young domain</span>
+            <span class="mini-chip">Suspicious TLD</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= FEATURES ======================= -->
+    <section class="landing-features container">
+      <h2 class="landing-features__title">Everything you need to stay safe online</h2>
+      <div class="landing-features__grid">
+        <div class="panel feature-card">
+          <div class="feature-card__icon" aria-hidden="true">🛡️</div>
+          <h3>URL Scanning</h3>
+          <p>Heuristics, WHOIS age, SSL validity, redirect chains and typosquatting — all rolled into one transparent risk score.</p>
+        </div>
+        <div class="panel feature-card">
+          <div class="feature-card__icon" aria-hidden="true">✉️</div>
+          <h3>Phishing Lab</h3>
+          <p>Paste any email, SMS or page text and get an instant phishing-likelihood meter with itemized flags.</p>
+        </div>
+        <div class="panel feature-card">
+          <div class="feature-card__icon" aria-hidden="true">🌐</div>
+          <h3>Threat Intelligence</h3>
+          <p>VirusTotal, Google Safe Browsing and PhishTank verdicts aggregated on every scan you run.</p>
+        </div>
+        <div class="panel feature-card">
+          <div class="feature-card__icon" aria-hidden="true">🗄️</div>
+          <h3>History & Reports</h3>
+          <p>Every scan is saved to your account — search, filter and reopen full reports any time.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="mono muted">ThreatLens v1.2 — FastAPI · SQLite · HTML/CSS/JS</span>
+      <span class="mono muted">Educational tool — always verify with official channels.</span>
+    </div>
+  </footer>
+
+  <script>
+    /* Theme toggle (light is the default; choice persists) */
+    (function () {
+      var SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
+      var MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      var btn = document.getElementById("themeToggle");
+      function sync() {
+        var dark = document.documentElement.dataset.theme === "dark";
+        btn.innerHTML = dark ? SUN : MOON;
+        btn.title = dark ? "Switch to light theme" : "Switch to dark theme";
+      }
+      btn.addEventListener("click", function () {
+        var next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem("threatlens_theme", next);
+        sync();
+      });
+      sync();
+      /* Signed-in visitors get a direct dashboard button (admins go to the panel) */
+      if (localStorage.getItem("threatlens_token")) {
+        var cta = document.getElementById("dashboardCta");
+        cta.hidden = false;
+        if (localStorage.getItem("threatlens_is_admin") === "1") {
+          cta.querySelector("a").href = "admin.html";
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

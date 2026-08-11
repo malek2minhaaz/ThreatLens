@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Environment & secrets
+.env
+*.env.local
+
+# Database
+*.db
+*.sqlite3
+
+# Runtime logs
+server*.log
+server*.err.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

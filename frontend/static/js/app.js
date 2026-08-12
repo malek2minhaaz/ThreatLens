@@ -15,6 +15,7 @@ const App = (() => {
     health: "/api/health",
     auth: "/api/auth",
     scan: "/api/scan-url",
+    scanBulk: "/api/scan-bulk",
     phishing: "/api/analyze-phishing",
     inspect: "/api/phishing/inspect",
     headers: "/api/phishing/headers",

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ThreatLens Scanner — Settings</title>
+<style>
+  :root {
+    --bg: #0b1220; --panel: #101a2e; --border: rgba(148,163,184,0.18);
+    --text: #e2e8f0; --dim: #94a3b8; --mute: #64748b;
+    --cyan: #22d3ee; --safe: #34d399; --danger: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--text); min-height: 100vh; padding: 40px 16px;
+  }
+  .card {
+    max-width: 440px; margin: 0 auto; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 14px; padding: 26px;
+  }
+  h1 { font-size: 19px; margin-bottom: 4px; }
+  h1 span { color: var(--cyan); }
+  .sub { color: var(--dim); font-size: 13px; margin-bottom: 22px; }
+  .field { margin-bottom: 14px; }
+  label { display: block; font-size: 12px; color: var(--mute); margin-bottom: 6px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 9px; padding: 10px 12px;
+    font-size: 13px; outline: none; font-family: "Cascadia Code", Consolas, monospace;
+  }
+  input:focus { border-color: rgba(34, 211, 238, 0.55); }
+  .row { display: flex; gap: 10px; margin-top: 18px; }
+  button {
+    flex: 1; border: none; cursor: pointer; border-radius: 9px; padding: 11px;
+    font-weight: 600; font-size: 13px; background: var(--bg); color: var(--text);
+    border: 1px solid var(--border); transition: border-color .2s, color .2s;
+  }
+  button:hover { color: var(--cyan); border-color: rgba(34, 211, 238, 0.5); }
+  button.primary {
+    background: linear-gradient(135deg, #22d3ee, #0ea5e9 60%, #a78bfa); color: #04121a; border: none;
+  }
+  button.primary:hover { color: #04121a; }
+  button.danger:hover { color: var(--danger); border-color: rgba(248, 113, 113, 0.5); }
+  #status { margin-top: 14px; font-size: 13px; color: var(--dim); min-height: 18px; }
+  #status.ok { color: var(--safe); }
+  .note { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--mute); font-size: 12px; line-height: 1.6; }
+  .note code { color: var(--cyan); }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>🛡️ Threat<span>Lens</span> Scanner</h1>
+    <p class="sub">Connect the extension to your ThreatLens backend.</p>
+
+    <div class="field">
+      <label for="server">Server URL</label>
+      <input id="server" type="text" placeholder="http://localhost:8000" spellcheck="false" />
+    </div>
+    <div class="field">
+      <label for="username">Username or email</label>
+      <input id="username" type="text" autocomplete="username" spellcheck="false" />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" />
+    </div>
+
+    <div class="row">
+      <button id="testBtn">Test connection</button>
+      <button id="saveBtn" class="primary">Sign in &amp; save</button>
+    </div>
+    <div class="row">
+      <button id="signOutBtn" class="danger">Sign out</button>
+    </div>
+
+    <div id="status" role="status"></div>
+
+    <p class="note">
+      The extension signs in once and stores the returned session token in
+      <code>chrome.storage.local</code> (never the password). If you host the
+      backend somewhere other than <code>localhost</code>, Chrome will ask for
+      permission to reach it when you sign in. Tokens expire after 30 days —
+      just sign in again. Use the dashboard to revoke sessions.
+    </p>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

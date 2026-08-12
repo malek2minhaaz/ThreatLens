@@ -84,6 +84,159 @@
     }
   }
 
+  /* ---------------- Mode switch (single / bulk) ---------------- */
+
+  qsa(".mode-switch__btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const mode = btn.dataset.mode;
+      qsa(".mode-switch__btn").forEach((b) => {
+        b.classList.toggle("is-active", b === btn);
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+      $("scanForm").hidden = mode !== "single";
+      $("bulkForm").hidden = mode !== "bulk";
+    });
+  });
+
+  /* ---------------- Bulk scan ---------------- */
+
+  $("bulkForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const urls = $("bulkUrls").value
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!urls.length) {
+      App.toast("Paste at least one URL to scan.");
+      $("bulkUrls").focus();
+      return;
+    }
+    runBulkScan(urls);
+  });
+
+  async function runBulkScan(urls) {
+    const unique = Array.from(new Set(urls)).slice(0, 25);
+    if (unique.length < urls.length) App.toast(`Deduplicated to ${unique.length} unique URLs.`, true);
+
+    const btn = $("bulkScanBtn");
+    const loading = $("bulkLoading");
+    const results = $("bulkResults");
+
+    results.hidden = true;
+    loading.hidden = false;
+    $("bulkProgress").textContent = String(unique.length);
+    btn.classList.add("is-loading");
+    btn.disabled = true;
+
+    try {
+      const data = await App.apiFetch(App.API.scanBulk, { method: "POST", body: JSON.stringify({ urls: unique }) });
+      renderBulkResults(data);
+      loading.hidden = true;
+      results.hidden = false;
+      results.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (err) {
+      loading.hidden = true;
+      App.toast(`Bulk scan failed: ${err.message}`);
+      console.error(err);
+    } finally {
+      btn.classList.remove("is-loading");
+      btn.disabled = false;
+    }
+  }
+
+  function scoreColor(score) {
+    if (score >= 85) return "var(--safe)";
+    if (score >= 70) return "var(--low)";
+    if (score >= 40) return "var(--suspicious)";
+    return "var(--danger)";
+  }
+
+  function renderBulkResults(data) {
+    const summary = data.summary || {};
+    const tiles = [
+      ["Safe", summary.safe || 0, "safe"],
+      ["Low risk", summary.low_risk || 0, "low"],
+      ["Suspicious", summary.suspicious || 0, "susp"],
+      ["Dangerous", summary.dangerous || 0, "danger"],
+      ["Failed", summary.failed || 0, "fail"],
+    ];
+    $("bulkSummary").innerHTML = tiles
+      .map(([label, n, cls]) =>
+        `<div class="stat-tile bulk-tile bulk-tile--${cls}"><span class="stat-tile__value">${n}</span><span class="stat-tile__label">${label}</span></div>`
+      )
+      .join("");
+
+    const rows = [];
+    data.results.forEach((r, i) => {
+      if (r.error) {
+        rows.push(`
+          <tr class="bulk-row" data-i="${i}">
+            <td class="mono">${i + 1}</td>
+            <td class="url-cell">${App.escapeHtml(r.url)}</td>
+            <td class="score-cell" style="color:var(--danger)">—</td>
+            <td><span class="verdict-badge verdict-badge--sm v-danger">Error</span></td>
+            <td colspan="2" class="muted">${App.escapeHtml(r.error)}</td>
+            <td></td>
+          </tr>`);
+        return;
+      }
+      rows.push(`
+        <tr class="bulk-row" data-i="${i}" tabindex="0" aria-expanded="false">
+          <td class="mono">${i + 1}</td>
+          <td class="url-cell" title="${App.escapeHtml(r.url)}">${App.escapeHtml(r.url)}</td>
+          <td><span class="bulk-score" style="color:${scoreColor(r.risk_score)}">${r.risk_score}</span><span class="bulk-score__unit">/100</span></td>
+          <td><span class="verdict-badge verdict-badge--sm ${App.verdictClass(r.verdict)}">${App.escapeHtml(r.verdict)}</span></td>
+          <td class="mono">${r.findings.length}</td>
+          <td class="mono">${(r.duration_ms / 1000).toFixed(1)}s</td>
+          <td><span class="bulk-chevron" aria-hidden="true">▸</span></td>
+        </tr>
+        <tr class="bulk-details" data-for="${i}" hidden>
+          <td colspan="7">
+            <div class="bulk-findings">${r.findings.length
+              ? r.findings.map((f) => findingHTML(f)).join("")
+              : '<div class="table-empty">No findings — clean scan.</div>'}
+            </div>
+          </td>
+        </tr>`);
+    });
+    $("bulkTableBody").innerHTML = rows.join("");
+
+    // Expand / collapse a row's findings
+    qsa(".bulk-row").forEach((row) => {
+      const toggle = () => {
+        const detail = qs(`.bulk-details[data-for="${row.dataset.i}"]`);
+        if (!detail) return;
+        detail.hidden = !detail.hidden;
+        row.classList.toggle("is-open", !detail.hidden);
+        row.setAttribute("aria-expanded", String(!detail.hidden));
+      };
+      row.addEventListener("click", toggle);
+      row.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    // CSV export
+    const csvBtn = $("bulkCsvBtn");
+    csvBtn.hidden = data.results.length === 0;
+    csvBtn.onclick = () => {
+      const head = "url,risk_score,verdict,risk_level,findings_count,duration_ms";
+      const lines = data.results.map((r) =>
+        [r.url, r.risk_score ?? "", r.verdict ?? "", r.risk_level ?? "", r.findings?.length ?? "", r.duration_ms ?? ""]
+          .map((v) => `"${String(v ?? "").replaceAll('"', '""')}"`)
+          .join(",")
+      );
+      const csv = [head, ...lines].join("\n");
+      const a = document.createElement("a");
+      a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      a.download = `threatlens-bulk-scan-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+    };
+  }
+
   /* ---------------- Report rendering ---------------- */
 
   function renderReport(data, opts = {}) {

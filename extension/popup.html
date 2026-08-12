@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #101a2e;
+    --border: rgba(148, 163, 184, 0.18);
+    --text: #e2e8f0;
+    --dim: #94a3b8;
+    --mute: #64748b;
+    --cyan: #22d3ee;
+    --safe: #34d399;
+    --low: #a3e635;
+    --suspicious: #fbbf24;
+    --danger: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 340px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    padding: 14px;
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .brand { font-weight: 700; letter-spacing: 0.3px; }
+  .brand span { color: var(--cyan); }
+  .brand .tag {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.4); border-radius: 999px;
+    padding: 2px 7px; margin-left: 6px; vertical-align: 1px;
+  }
+  .icon-btn {
+    background: transparent; border: none; color: var(--mute); cursor: pointer;
+    width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center;
+  }
+  .icon-btn:hover { color: var(--cyan); background: rgba(34, 211, 238, 0.1); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .url {
+    width: 100%; background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 9px; padding: 9px 11px;
+    font-family: "Cascadia Code", Consolas, monospace; font-size: 12px; outline: none;
+  }
+  .url:focus { border-color: rgba(34, 211, 238, 0.55); }
+  .btn {
+    width: 100%; margin-top: 8px; border: none; cursor: pointer; border-radius: 9px;
+    padding: 10px; font-weight: 600; font-size: 13px; background: var(--panel);
+    color: var(--text); border: 1px solid var(--border); transition: border-color .2s, color .2s;
+  }
+  .btn:hover { color: var(--cyan); border-color: rgba(34, 211, 238, 0.5); }
+  .btn.primary {
+    background: linear-gradient(135deg, #22d3ee, #0ea5e9 60%, #a78bfa); color: #04121a; border: none;
+  }
+  .btn.primary:hover { color: #04121a; }
+  .btn.primary:disabled { opacity: 0.6; cursor: wait; }
+  .hint { color: var(--mute); font-size: 11px; margin-top: 7px; }
+  .status { color: var(--dim); font-size: 12px; margin-top: 8px; min-height: 16px; }
+  .warn { color: var(--suspicious); font-size: 12px; margin-top: 8px; }
+  .warn a { color: var(--cyan); }
+  .center { text-align: center; padding: 18px 0 8px; }
+  .center p { color: var(--dim); margin-bottom: 12px; }
+
+  .results { margin-top: 12px; }
+  .ring-wrap { text-align: center; }
+  .ring {
+    width: 108px; height: 108px; border-radius: 50%; margin: 6px auto;
+    display: grid; place-items: center; position: relative;
+    background: conic-gradient(var(--safe) 0deg, rgba(148, 163, 184, 0.15) 0deg);
+    transition: background 0.6s;
+  }
+  .ring::before {
+    content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--bg);
+  }
+  .ring__val { position: relative; z-index: 1; font-weight: 700; font-size: 30px; font-family: "Space Grotesk", sans-serif; }
+  .ring__unit { position: relative; z-index: 1; font-size: 10px; color: var(--mute); text-align: center; margin-top: -18px; }
+  .verdict {
+    display: inline-block; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    font-size: 11px; padding: 5px 13px; border-radius: 999px; border: 1px solid; margin-top: 6px;
+  }
+  .verdict.v-safe { color: var(--safe); border-color: rgba(52, 211, 153, 0.45); background: rgba(52, 211, 153, 0.1); }
+  .verdict.v-low { color: var(--low); border-color: rgba(163, 230, 53, 0.45); background: rgba(163, 230, 53, 0.1); }
+  .verdict.v-suspicious { color: var(--suspicious); border-color: rgba(251, 191, 36, 0.45); background: rgba(251, 191, 36, 0.1); }
+  .verdict.v-danger { color: var(--danger); border-color: rgba(248, 113, 113, 0.5); background: rgba(248, 113, 113, 0.12); }
+  .scan-url { font-family: "Cascadia Code", Consolas, monospace; font-size: 11.5px; color: var(--dim); word-break: break-all; margin-top: 9px; }
+  .meta { font-family: "Cascadia Code", Consolas, monospace; font-size: 11px; color: var(--mute); margin-top: 3px; }
+  .findings { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; max-height: 210px; overflow: auto; }
+  .finding {
+    display: grid; grid-template-columns: 40px 1fr; gap: 8px; align-items: start;
+    background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--mute);
+    border-radius: 8px; padding: 7px 9px;
+  }
+  .finding.f-critical { border-left-color: var(--danger); }
+  .finding.f-high { border-left-color: var(--suspicious); }
+  .finding.f-medium { border-left-color: var(--cyan); }
+  .finding.f-low { border-left-color: var(--dim); }
+  .finding.f-info { border-left-color: #a78bfa; }
+  .finding.f-positive { border-left-color: var(--safe); }
+  .f-pts { font-weight: 700; font-size: 12px; text-align: center; background: rgba(148, 163, 184, 0.12); border-radius: 6px; padding: 4px 0; }
+  .f-pts.pos { color: var(--safe); }
+  .f-pts.neg { color: var(--danger); }
+  .f-title { font-weight: 600; font-size: 12px; }
+  .f-detail { color: var(--dim); font-size: 11px; margin-top: 1px; }
+  .more { text-align: center; color: var(--mute); font-size: 11px; }
+  .report-link { display: block; text-align: center; color: var(--cyan); font-size: 12px; margin-top: 12px; text-decoration: none; }
+  .report-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <span class="brand">🛡️ Threat<span>Lens</span><span class="tag">scanner</span></span>
+    <button class="icon-btn" id="optionsBtn" title="Settings" aria-label="Open settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div id="unconfigured" class="center" hidden>
+    <p>ThreatLens isn't configured yet.<br>Sign in to your server in the settings.</p>
+    <button class="btn primary" id="openOptions">Open settings</button>
+  </div>
+
+  <div id="scanArea">
+    <input id="urlInput" class="url" type="text" placeholder="Paste a URL to scan…" spellcheck="false" aria-label="URL to scan" />
+    <button class="btn primary" id="scanBtn">Scan URL</button>
+    <p class="hint">Pre-filled with the current tab — edit it if needed.</p>
+    <div id="status" class="status" role="status"></div>
+    <div id="reauth" class="warn" hidden>
+      Your session expired or the server rejected the token —
+      <a href="#" id="reauthLink">re-sign in</a>.
+    </div>
+  </div>
+
+  <div id="results" class="results" hidden>
+    <div class="ring-wrap">
+      <div class="ring" id="scoreRing"><span class="ring__val" id="scoreValue">—</span></div>
+    </div>
+    <div style="text-align:center"><span class="verdict" id="verdict">—</span></div>
+    <div class="scan-url" id="scanUrl"></div>
+    <div class="meta" id="scanMeta"></div>
+    <div id="findings" class="findings"></div>
+    <a class="report-link" id="openReport" href="#" target="_blank" hidden>Open full report →</a>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

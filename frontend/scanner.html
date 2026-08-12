@@ -28,6 +28,11 @@
             ThreatLens dissects URLs for typosquatting, suspicious TLDs, domain age,
             TLS validity and redirect chains — then produces a unified 0–100 risk score.
           </p>
+          <div class="mode-switch" role="tablist" aria-label="Scan mode">
+            <button type="button" class="mode-switch__btn is-active" role="tab" aria-selected="true" data-mode="single">Single URL</button>
+            <button type="button" class="mode-switch__btn" role="tab" aria-selected="false" data-mode="bulk">Bulk scan</button>
+          </div>
+
           <form id="scanForm" class="scan-form" autocomplete="off">
             <div class="scan-form__bar">
               <span class="scan-form__icon" aria-hidden="true">
@@ -51,6 +56,21 @@
               <button type="button" class="chip" data-sample="http://192.168.1.10:8080/billing">IP-based</button>
             </div>
           </form>
+
+          <form id="bulkForm" class="scan-form bulk-form" autocomplete="off" hidden>
+            <div class="bulk-form__box">
+              <label class="field-label" for="bulkUrls">One URL per line — up to 25</label>
+              <textarea id="bulkUrls" class="textarea" rows="6" spellcheck="false" aria-label="URLs to scan in bulk"
+                placeholder="https://example.com&#10;http://paypal-account-verify.tk/login&#10;https://secure-bank-of-america-login.xyz/verify?redirect=phish&#10;http://192.168.1.10:8080/billing"></textarea>
+            </div>
+            <div class="bulk-form__actions">
+              <button id="bulkScanBtn" class="btn btn--primary" type="submit">
+                <span class="btn__label">Scan all URLs</span>
+                <span class="btn__spinner" aria-hidden="true"></span>
+              </button>
+              <span class="bulk-form__hint">Scans run in parallel · every result is saved to your History</span>
+            </div>
+          </form>
         </div>
 
         <!-- Scan results -->
@@ -63,6 +83,43 @@
           </div>
           <h3>Awaiting your first scan</h3>
           <p>Paste a URL above and hit <strong>Scan URL</strong>. You'll get heuristics, WHOIS/SSL/HTTP metadata, threat-intel verdicts and an itemized risk breakdown.</p>
+        </div>
+
+        <!-- Bulk results -->
+        <div id="bulkResults" hidden>
+          <div class="bulk-summary" id="bulkSummary"></div>
+          <div class="panel">
+            <div class="panel-head">
+              <h3 class="panel-title">Bulk scan results</h3>
+              <div class="bulk-actions">
+                <button class="btn btn--ghost" id="bulkCsvBtn" hidden>Download CSV</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table" aria-label="Bulk scan results">
+                <thead>
+                  <tr><th>#</th><th>URL</th><th>Score</th><th>Verdict</th><th>Findings</th><th>Time</th><th></th></tr>
+                </thead>
+                <tbody id="bulkTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bulk loading -->
+        <div id="bulkLoading" class="panel panel--loading" hidden>
+          <div class="radar" aria-hidden="true">
+            <div class="radar__ring radar__ring--1"></div>
+            <div class="radar__ring radar__ring--2"></div>
+            <div class="radar__ring radar__ring--3"></div>
+            <div class="radar__core"></div>
+          </div>
+          <h3>Scanning <span id="bulkProgress" class="mono">0/0</span> URLs…</h3>
+          <ul class="pipeline">
+            <li class="is-active"><span class="pipeline__dot"></span>Running the full pipeline per URL (parallel)</li>
+            <li><span class="pipeline__dot"></span>WHOIS · SSL · HTTP · threat-intel feeds</li>
+            <li><span class="pipeline__dot"></span>Saving every result to History</li>
+          </ul>
         </div>
 
         <div id="scanLoading" class="panel panel--loading" hidden>

@@ -300,6 +300,39 @@ Extra phishing tools live in the **Phishing Lab** page (tabs) and the
 Watchlist matches are shown automatically whenever a saved sender/domain/URL
 appears in a content analysis, link inspection or sender check.
 
+### Bulk scanning
+
+Scan up to 25 URLs at once — each runs the full pipeline in parallel (bounded
+concurrency) and is persisted to history. Individual failures are reported
+per-URL instead of failing the batch:
+
+```bash
+curl -X POST http://localhost:8000/api/scan-bulk \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://example.com", "http://paypal-account-verify.tk/login"]}'
+```
+
+Returns a `results` array (per-URL score, verdict, findings, `scan_id`), a
+`summary` of verdict counts, and `total`. The scanner page has a **Bulk scan**
+mode with an expandable results table and CSV export.
+
+### Browser extension
+
+A Manifest V3 Chrome extension (`extension/`) scans any URL against your
+backend right from the browser: toolbar popup with a score ring, right-click
+context-menu scans (page / link / selection), a color-coded toolbar badge, and
+full-report tabs.
+
+1. Load it at **chrome://extensions** → Developer mode → **Load unpacked** →
+   select the `extension/` folder.
+2. Open the extension's settings, enter your server URL
+   (`http://localhost:8000`) and your ThreatLens username/password, then
+   **Sign in & save**.
+3. Click the extension icon to scan the current tab, or right-click any link.
+
+See `extension/README.md` for details.
+
 ### Other endpoints
 | Method | Path | Description |
 | ------ | ---- | ----------- |

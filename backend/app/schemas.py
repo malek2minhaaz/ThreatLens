@@ -1,6 +1,8 @@
 """Pydantic request/response schemas."""
 from __future__ import annotations
 
+from typing import Annotated
+
 from pydantic import BaseModel, EmailStr, Field
 
 CONTENT_TYPES = ("email", "sms", "page_text")
@@ -18,6 +20,17 @@ class ScanRequest(BaseModel):
         min_length=4,
         max_length=2048,
         description="The URL to scan. A scheme is added automatically if missing.",
+    )
+
+
+class BulkScanRequest(BaseModel):
+    """Payload for POST /api/scan-bulk (up to 25 URLs, deduplicated)."""
+
+    urls: list[Annotated[str, Field(min_length=4, max_length=2048)]] = Field(
+        ...,
+        min_length=1,
+        max_length=25,
+        description="Up to 25 URLs to scan in parallel. Blank lines and duplicates are removed.",
     )
 
 

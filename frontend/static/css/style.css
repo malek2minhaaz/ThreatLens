@@ -37,6 +37,9 @@
   --radius-sm: 10px;
   --shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.7);
   --glow-cyan: 0 0 24px rgba(34, 211, 238, 0.35);
+
+  /* Originkit prism-grid line color (overrides in the light theme below) */
+  --prism-grid-line: rgba(148, 163, 184, 0.16);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,6 +77,55 @@ body {
 }
 .bg-glow--cyan { width: 560px; height: 560px; top: -180px; right: -120px; background: var(--cyan); }
 .bg-glow--magenta { width: 480px; height: 480px; top: 30%; left: -200px; background: var(--magenta); opacity: 0.10; }
+
+/* ---------- Originkit prism grid (cursor-reactive background) ---------- */
+/* Listens for pointer moves on `window`, so the layer itself can sit
+   behind the content with pointer-events: none. See backgrounds.js. */
+.prism-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.prism-grid__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 1000px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+}
+.prism-grid__plane {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  background-image:
+    linear-gradient(var(--prism-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--prism-grid-line) 1px, transparent 1px);
+  background-size: 40px 40px; /* overridden inline to match data-box-size */
+}
+.prism-grid__cell {
+  position: absolute;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+.prism-grid__cell.is-fading {
+  opacity: 0;
+}
+
+/* ---------- Neon maze (full-screen canvas animation) ---------- */
+.neon-maze {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  /* Keep it ambient so content stays readable over it */
+  opacity: 0.45;
+}
 
 .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 .mono { font-family: var(--font-mono); font-size: 0.86rem; word-break: break-all; }
@@ -1256,6 +1308,7 @@ body {
 
   --shadow: 0 20px 60px -24px rgba(26, 109, 181, 0.28);
   --glow-cyan: 0 0 24px rgba(8, 145, 178, 0.22);
+  --prism-grid-line: rgba(26, 109, 181, 0.10);
 }
 
 /* Fix the few hardcoded dark colors so they read correctly on white */

@@ -13,23 +13,8 @@
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
-  <!-- Ambient background -->
-  <div class="bg-grid" aria-hidden="true"></div>
-  <div class="bg-glow bg-glow--cyan" aria-hidden="true"></div>
-  <div class="bg-glow bg-glow--magenta" aria-hidden="true"></div>
-
-  <!-- Floating particles -->
-  <div class="particles" aria-hidden="true">
-    <span style="left:8%; width:5px; height:5px; animation-duration:11s; animation-delay:0s;"></span>
-    <span style="left:18%; width:3px; height:3px; animation-duration:14s; animation-delay:2s;"></span>
-    <span style="left:29%; width:6px; height:6px; animation-duration:12s; animation-delay:4s;"></span>
-    <span style="left:42%; width:4px; height:4px; animation-duration:16s; animation-delay:1s;"></span>
-    <span style="left:55%; width:5px; height:5px; animation-duration:10s; animation-delay:3s;"></span>
-    <span style="left:66%; width:3px; height:3px; animation-duration:15s; animation-delay:0.5s;"></span>
-    <span style="left:74%; width:6px; height:6px; animation-duration:13s; animation-delay:2.5s;"></span>
-    <span style="left:85%; width:4px; height:4px; animation-duration:11s; animation-delay:5s;"></span>
-    <span style="left:93%; width:5px; height:5px; animation-duration:17s; animation-delay:1.5s;"></span>
-  </div>
+  <!-- Ambient background: prism grid (subtle animated grid) -->
+  <div class="prism-grid" aria-hidden="true" data-rotate-x="10" data-rotate-y="-8" data-sway="4"></div>
 
   <!-- Landing header -->
   <header class="landing-header">
@@ -169,5 +154,7 @@
       }
     })();
   </script>
+
+  <script src="/static/js/backgrounds.js" defer></script>
 </body>
 </html>

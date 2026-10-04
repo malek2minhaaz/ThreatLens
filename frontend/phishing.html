@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phishing Lab · ThreatLens</title>
   <meta name="description" content="Phishing toolkit: content analyzer, link inspector, email header analyzer, sender domain check and watchlist." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
   <!-- Ambient background -->
@@ -128,7 +128,7 @@
                   </div>
                 </div>
                 <div class="watch-match" id="inspectWatchMatches" hidden></div>
-                <h3 class="panel-title" style="margin-top:18px">Link scan results</h3>
+                <h3 class="panel-title result-meta--mt">Link scan results</h3>
                 <div id="inspectLinks" class="inspector-grid"></div>
               </div>
             </div>
@@ -248,9 +248,9 @@
     </section>
   </main>
 
-  <script src="/static/js/app.js" defer></script>
-  <script src="/static/js/backgrounds.js" defer></script>
-  <script src="/static/js/pages/phishing.js" defer></script>
-  <script src="/static/js/pages/phishing-tools.js" defer></script>
+  <script src="/static/js/app.js?v=4" defer></script>
+  <script src="/static/js/backgrounds.js?v=4" defer></script>
+  <script src="/static/js/pages/phishing.js?v=4" defer></script>
+  <script src="/static/js/pages/phishing-tools.js?v=4" defer></script>
 </body>
 </html>

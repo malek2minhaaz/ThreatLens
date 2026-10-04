@@ -429,6 +429,88 @@
     }
   });
 
+  /* ---------------- Compare mode ---------------- */
+
+  let compareMode = false;
+  let compareIds = [];
+
+  $("compareModeBtn").addEventListener("click", () => {
+    compareMode = !compareMode;
+    $("compareModeBtn").classList.toggle("is-selected", compareMode);
+    if (!compareMode) {
+      $("comparePanel").hidden = true;
+      compareIds = [];
+    } else {
+      App.toast("Click a scan card in History to add it to comparison (max 2).", true);
+    }
+  });
+
+  /* ---------------- CSV Import ---------------- */
+
+  $("csvImportBtn").addEventListener("click", () => {
+    const panel = $("csvImportPanel");
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  const importDrop = $("importDrop");
+  const csvFileInput = $("csvFileInput");
+
+  if (importDrop) {
+    importDrop.addEventListener("dragover", (e) => { e.preventDefault(); importDrop.classList.add("is-dragover"); });
+    importDrop.addEventListener("dragleave", () => importDrop.classList.remove("is-dragover"));
+    importDrop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      importDrop.classList.remove("is-dragover");
+      if (e.dataTransfer.files.length) parseCsvFile(e.dataTransfer.files[0]);
+    });
+  }
+  if (csvFileInput) csvFileInput.addEventListener("change", (e) => {
+    if (e.target.files.length) parseCsvFile(e.target.files[0]);
+  });
+
+  function parseCsvFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      const urls = [];
+      for (const line of lines) {
+        /* Simple CSV: find anything that looks like a URL */
+        const matches = line.match(/https?:\/\/[^\s",;]+/gi);
+        if (matches) urls.push(...matches);
+      }
+      if (!urls.length) {
+        App.toast("No URLs found in the file.");
+        return;
+      }
+      const preview = $("csvPreview");
+      preview.hidden = false;
+      preview.innerHTML = `
+        <p class="result-meta">Found ${urls.length} URL(s) — ready to scan.</p>
+        <button class="btn btn--primary" id="csvScanBtn">Scan ${urls.length} URLs</button>
+        <button class="btn btn--ghost" id="csvClearBtn">Clear</button>`;
+      $("csvScanBtn").addEventListener("click", () => {
+        $("bulkUrls").value = urls.join("\n");
+        /* Switch to bulk mode */
+        qsa(".mode-switch__btn").forEach((b) => {
+          const isActive = b.dataset.mode === "bulk";
+          b.classList.toggle("is-active", isActive);
+          b.setAttribute("aria-selected", String(isActive));
+        });
+        $("scanForm").hidden = true;
+        $("bulkForm").hidden = false;
+        runBulkScan(urls);
+        $("csvImportPanel").hidden = true;
+      });
+      $("csvClearBtn").addEventListener("click", () => {
+        preview.hidden = true;
+        csvFileInput.value = "";
+      });
+    };
+    reader.readAsText(file);
+  }
+
   /* ---------------- Deep links ---------------- */
 
   const params = new URLSearchParams(location.search);

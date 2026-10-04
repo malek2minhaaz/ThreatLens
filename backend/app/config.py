@@ -39,6 +39,23 @@ class Settings:
     GOOGLE_SAFE_BROWSING_API_KEY: str = os.getenv("GOOGLE_SAFE_BROWSING_API_KEY", "").strip()
     PHISHTANK_API_KEY: str = os.getenv("PHISHTANK_API_KEY", "").strip()
 
+    # CORS origins (comma-separated, or * for dev)
+    CORS_ORIGINS: list[str] = [
+        o.strip()
+        for o in os.getenv("CORS_ORIGINS", "*").split(",")
+        if o.strip()
+    ]
+
+    # Admin email for notifications (optional)
+    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "").strip()
+
+    # SMTP settings for email notifications (optional)
+    SMTP_HOST: str = os.getenv("SMTP_HOST", "").strip()
+    SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USER: str = os.getenv("SMTP_USER", "").strip()
+    SMTP_PASS: str = os.getenv("SMTP_PASS", "").strip()
+    SMTP_FROM: str = os.getenv("SMTP_FROM", "noreply@threatlens.local").strip()
+
     # Tuning
     REQUEST_TIMEOUT: int = int(os.getenv("REQUEST_TIMEOUT", "10"))
     # Hard cap for the whole scan pipeline (WHOIS can be slow)

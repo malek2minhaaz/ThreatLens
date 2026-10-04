@@ -4,19 +4,23 @@ from __future__ import annotations
 import asyncio
 import json
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
-from ..database import get_db
+from ..database import SessionLocal, get_db
 from ..dependencies import get_current_user
 from ..models import ScanRecord, User
 from ..schemas import BulkScanRequest, ScanRequest
+from ..services.rate_limit import scan_limiter
 from ..services.scanner import InvalidURLError, scan_url
 
 router = APIRouter(tags=["scanner"])
 
 MAX_BULK_URLS = 25
 BULK_CONCURRENCY = 5
+
+def _client_ip(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
 
 
 def _persist_scan(db: Session, user: User, result: dict) -> int:
@@ -46,6 +50,7 @@ def _persist_scan(db: Session, user: User, result: dict) -> int:
 @router.post("/api/scan-url", summary="Scan a URL for threats")
 async def scan_url_endpoint(
     payload: ScanRequest,
+    request: Request,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict:
@@ -53,6 +58,8 @@ async def scan_url_endpoint(
     Run the full scanning pipeline against a URL and return a unified risk
     report (score 0-100, 100 = safe) with an itemized breakdown.
     """
+    if not scan_limiter.allow(f"scan:{user.id}"):
+        raise HTTPException(status_code=429, detail="Too many scan requests. Try again later.")
     try:
         result = await scan_url(payload.url)
     except InvalidURLError as exc:
@@ -96,7 +103,12 @@ async def scan_bulk_endpoint(
                 return {"url": raw, "error": "Scan timed out — the target may be slow or unresponsive."}
             except Exception as exc:  # noqa: BLE001 - per-URL degradation
                 return {"url": raw, "error": f"Scan failed: {exc}"}
-            scan_id = _persist_scan(db, user, result)
+            # Use a fresh DB session per worker to avoid race conditions
+            worker_db = SessionLocal()
+            try:
+                scan_id = _persist_scan(worker_db, user, result)
+            finally:
+                worker_db.close()
             return {
                 "url": result["request"]["normalized_url"],
                 "scan_id": scan_id,

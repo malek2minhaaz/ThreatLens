@@ -22,3 +22,8 @@ server*.err.log
 Thumbs.db
 .idea/
 .vscode/
+
+# AI & tool generator artifacts
+.freebuff/
+.codex*/
+output/

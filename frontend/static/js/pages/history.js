@@ -253,5 +253,7 @@
 
   /* ---------------- Init ---------------- */
 
+  // Show skeleton loaders while data loads
+  App.showSkeleton("#historyCards");
   renderAll();
 })();

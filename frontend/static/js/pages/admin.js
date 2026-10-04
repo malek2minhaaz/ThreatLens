@@ -209,6 +209,30 @@
     }
   });
 
+  /* ---------------- Audit log ---------------- */
+
+  async function loadAudit() {
+    try {
+      const data = await App.apiFetch("/api/audit/log?limit=30");
+      $("auditMeta").textContent = data.total + " total entries";
+      $("auditLog").innerHTML = data.items.length
+        ? data.items.map(function(r) {
+            var det = r.detail ? " — " + App.escapeHtml(r.detail) : "";
+            var ip = r.ip_address ? " <span class=\"mono muted\">(" + App.escapeHtml(r.ip_address) + ")</span>" : "";
+            return '<div class="audit-entry">' +
+              '<span class="audit-entry__time">' + App.timeAgo(r.created_at) + '</span>' +
+              '<span class="audit-entry__action">' +
+                '<span class="audit-entry__user">' + App.escapeHtml(r.action) + '</span>' +
+                det + ip +
+              '</span>' +
+            '</div>';
+          }).join("")
+        : '<div class="table-empty">No audit entries yet.</div>';
+    } catch (err) {
+      $("auditLog").innerHTML = '<div class="table-empty">Could not load audit log: ' + App.escapeHtml(err.message) + '</div>';
+    }
+  }
+
   /* ---------------- Init ---------------- */
 
   App.ensureAdmin().then((admin) => {
@@ -216,5 +240,6 @@
     loadStats().catch((err) => App.toast(`Stats failed: ${err.message}`));
     loadUsers();
     loadScans();
+    loadAudit();
   });
 })();

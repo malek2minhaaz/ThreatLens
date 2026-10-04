@@ -382,6 +382,26 @@
   }
   /* __REPORT_BUILDERS_END__ */
 
+  $("reportPdfBtn").addEventListener("click", () => withReportButton($("reportPdfBtn"), async () => {
+    const data = await ensureReport();
+    const html = buildReportHTML(data);
+    /* Open a new window with the report and trigger print dialog (Save as PDF) */
+    const win = window.open("", "_blank");
+    if (win) {
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+      /* Wait for render then trigger print */
+      setTimeout(() => { win.print(); }, 500);
+      setReportStatus("PDF print dialog opened — choose 'Save as PDF'.");
+      App.toast("PDF print dialog opened.", true);
+    } else {
+      /* Popup blocked — fall back to HTML download */
+      downloadFile(reportFilename(data, "html"), html, "text/html");
+      setReportStatus("Popup blocked — downloaded HTML instead. Use Print → Save as PDF.");
+    }
+  }));
+
   $("reportCsvBtn").addEventListener("click", () => withReportButton($("reportCsvBtn"), async () => {
     const data = await ensureReport();
     downloadFile(reportFilename(data, "csv"), "\uFEFF" + buildReportCSV(data), "text/csv;charset=utf-8");

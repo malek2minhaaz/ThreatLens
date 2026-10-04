@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Account · ThreatLens</title>
   <meta name="description" content="Create a ThreatLens account to store your scans and analyses." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
   <!-- Ambient background -->
@@ -36,19 +36,19 @@
         <form id="registerForm" class="form" autocomplete="on">
           <div class="field">
             <label class="field-label" for="regUsername">Username</label>
-            <input id="regUsername" class="input" type="text" placeholder="alex" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" title="Letters, numbers and underscores only" required />
+            <input id="regUsername" class="input" type="text" placeholder="alex" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" title="Letters, numbers and underscores only" autocomplete="username" required />
           </div>
           <div class="field">
             <label class="field-label" for="regEmail">Email</label>
-            <input id="regEmail" class="input" type="email" placeholder="alex@mail.com" required />
+            <input id="regEmail" class="input" type="email" placeholder="alex@mail.com" autocomplete="email" required />
           </div>
           <div class="field">
-            <label class="field-label" for="regPassword">Password <span class="muted">(min 8 chars)</span></label>
-            <input id="regPassword" class="input" type="password" placeholder="••••••••" minlength="8" required />
+            <label class="field-label" for="regPassword">Password <span class="muted">(min 8 chars · A–Z, a–z, 0–9)</span></label>
+            <input id="regPassword" class="input" type="password" placeholder="••••••••" minlength="8" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}" title="At least 8 characters, with an uppercase letter, a lowercase letter and a digit" autocomplete="new-password" required />
           </div>
           <div class="field">
             <label class="field-label" for="regPassword2">Confirm password</label>
-            <input id="regPassword2" class="input" type="password" placeholder="••••••••" minlength="8" required />
+            <input id="regPassword2" class="input" type="password" placeholder="••••••••" minlength="8" autocomplete="new-password" required />
           </div>
           <button class="btn btn--primary btn--block" type="submit" id="registerBtn">
             <span class="btn__label">Create Account</span>
@@ -60,8 +60,8 @@
     </section>
   </main>
 
-  <script src="/static/js/app.js" defer></script>
-  <script src="/static/js/backgrounds.js" defer></script>
-  <script src="/static/js/pages/auth.js" defer></script>
+  <script src="/static/js/app.js?v=4" defer></script>
+  <script src="/static/js/backgrounds.js?v=4" defer></script>
+  <script src="/static/js/pages/auth.js?v=4" defer></script>
 </body>
 </html>

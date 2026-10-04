@@ -26,7 +26,7 @@ from sqlalchemy import inspect, text
 from .config import settings
 from .database import Base, SessionLocal, engine
 from .models import User
-from .routers import admin, auth, history, intel, phishing, scanner, tools, users
+from .routers import admin, auth, history, intel, phishing, scanner, tools, users, audit, webhooks
 
 # -- Database ---------------------------------------------------------------
 
@@ -75,9 +75,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten this in production (see README)
+    allow_origins=settings.CORS_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 # -- API routes --------------------------------------------------------------
@@ -89,6 +90,8 @@ app.include_router(phishing.router)
 app.include_router(tools.router)
 app.include_router(history.router)
 app.include_router(admin.router)
+app.include_router(audit.router)
+app.include_router(webhooks.router)
 
 
 @app.get("/api/health", tags=["meta"])
@@ -123,4 +126,5 @@ def spa_fallback(full_path: str):
         candidate = frontend_root
     if candidate.is_relative_to(frontend_root) and candidate.is_file():
         return FileResponse(candidate)
+    # Log 404s for debugging (non-API paths only)
     return JSONResponse({"detail": "Not found"}, status_code=404)

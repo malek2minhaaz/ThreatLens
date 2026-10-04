@@ -1,0 +1,213 @@
+<mxfile host="app.diagrams.net" agent="ThreatLens documentation generator" version="24.7.8">
+  <diagram id="threatlens-usecase" name="Use Case Diagram">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1180" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="boundary" value="ThreatLens Platform" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=15;fontStyle=1;fillColor=none;strokeColor=#4D4D4D;" vertex="1" parent="1">
+          <mxGeometry x="200" y="40" width="1080" height="960" as="geometry" />
+        </mxCell>
+        <mxCell id="actVisitor" value="Visitor&#10;(unauthenticated)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actUser" value="User&#10;(authenticated)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="560" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actAdmin" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="140" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actExt" value="Browser&#10;Extension" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="560" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actIntel" value="Threat-Intel Providers&#10;(VirusTotal / Safe Browsing / PhishTank)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="610" y="1040" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="actHook" value="Webhook Receiver&#10;(external system)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="980" y="1040" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uc1" value="Register Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="110" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc2" value="Login / Logout" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="210" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc3" value="Manage Profile&#10;(display name / email / password)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="260" y="310" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc4" value="Scan URL (Single)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="430" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc5" value="Bulk Scan URLs (up to 25)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="530" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc6" value="Analyze Phishing Content" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="630" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc7" value="Inspect Message Links" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="730" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc8" value="Analyze Email Headers" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="260" y="830" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc9" value="Check Sender Reputation" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="560" y="110" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc10" value="View Scan History" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="210" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc11" value="View Phishing History" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="310" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc12" value="View Stats and Trends" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="410" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc13" value="Export Activity Report" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="510" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc14" value="Manage Watchlist&#10;(add / remove indicators)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="610" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc15" value="Check Watchlist Matches" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="710" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc16" value="View Threat-Intel Feed" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="560" y="810" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc17" value="Manage Webhooks" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="880" y="110" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc18" value="View Platform Statistics" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="880" y="220" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc19" value="Manage Users&#10;(promote / demote / delete)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="880" y="330" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc20" value="View Audit Log" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="880" y="440" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc21" value="Record Audit Entry" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="880" y="550" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc22" value="Perform Threat-Intel Lookup" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="880" y="660" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="uc23" value="Deliver Webhook Notification" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="880" y="770" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="aV1" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actVisitor" target="uc1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aV2" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actVisitor" target="uc2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU2" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU3" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU4" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU5" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU6" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU7" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU8" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU9" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU10" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU11" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU12" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU13" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU14" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU16" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aU17" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actUser" target="uc17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aA18" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actAdmin" target="uc18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aA19" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actAdmin" target="uc19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aA20" style="endArrow=none;html=1;strokeColor=#333333;" edge="1" parent="1" source="actAdmin" target="uc20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aGen" value="" style="endArrow=block;endFill=0;html=1;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actAdmin" target="actUser">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="170" />
+              <mxPoint x="40" y="470" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aE4" style="endArrow=none;html=1;strokeColor=#333333;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="actExt" target="uc4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aI22" style="endArrow=none;html=1;strokeColor=#333333;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="actIntel" target="uc22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aH23" style="endArrow=none;html=1;strokeColor=#333333;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="actHook" target="uc23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc1" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="uc5" target="uc4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="555" />
+              <mxPoint x="490" y="455" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="inc2" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.25;entryX=1;entryY=0.75;" edge="1" parent="1" source="uc7" target="uc4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="486" y="742" />
+              <mxPoint x="486" y="467" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="inc3" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="uc7" target="uc6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc4" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="uc6" target="uc15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="655" />
+              <mxPoint x="500" y="735" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="inc5" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="uc4" target="uc22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext1" value="«extend»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;" edge="1" parent="1" source="uc4" target="uc23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc6" value="«include»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="uc19" target="uc21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

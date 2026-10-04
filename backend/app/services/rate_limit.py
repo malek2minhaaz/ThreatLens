@@ -37,3 +37,5 @@ class SlidingWindowLimiter:
 login_limiter = SlidingWindowLimiter(max_attempts=10, window_seconds=900)
 register_limiter = SlidingWindowLimiter(max_attempts=5, window_seconds=3600)
 tool_limiter = SlidingWindowLimiter(max_attempts=30, window_seconds=3600)
+# Scan endpoints: 20 scans / hour per user (higher limit for bulk)
+scan_limiter = SlidingWindowLimiter(max_attempts=20, window_seconds=3600)

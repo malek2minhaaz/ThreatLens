@@ -160,9 +160,19 @@ const App = (() => {
       let detail = `HTTP ${resp.status}`;
       try {
         const body = await resp.json();
-        detail = body.detail || detail;
+        if (Array.isArray(body.detail)) {
+          /* FastAPI 422s return an array of validation errors — flatten to
+             a readable message (e.g. "Value error, Password must contain…"). */
+          detail = body.detail
+            .map((d) => (typeof d === "string" ? d : d.msg || d.loc?.slice(-1)[0] || JSON.stringify(d)))
+            .join(" ");
+        } else {
+          detail = body.detail || detail;
+        }
       } catch { /* ignore */ }
-      throw new Error(detail);
+      const err = new Error(detail);
+      err.status = resp.status;
+      throw err;
     }
     return resp.json();
   }
@@ -171,6 +181,7 @@ const App = (() => {
     setToken(null);
     state.user = null;
     if (!location.pathname.endsWith("login.html")) {
+      sessionStorage.setItem("threatlens_redirect_reason", "expired");
       toast("Your session has expired. Please sign in again.");
       setTimeout(() => location.replace("login.html"), 400);
     }
@@ -224,6 +235,9 @@ const App = (() => {
           <span class="brand__shield" aria-hidden="true">${SHIELD_SVG}</span>
           <span class="brand__name">Threat<span class="brand__accent">Lens</span></span>
         </a>
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
         <nav class="site-nav" id="mainNav" aria-label="Primary"${authed ? "" : " hidden"}></nav>
         <div class="header-right">
           <span class="status-pill" id="apiStatus" title="API connectivity — click to re-check">
@@ -253,6 +267,33 @@ const App = (() => {
     document.body.insertAdjacentHTML("beforeend", '<div class="toast" id="toast" role="status" hidden></div>');
 
     renderNav();
+
+    // Hamburger menu toggle
+    const hamburger = $("hamburgerBtn");
+    const mainNav = $("mainNav");
+    if (hamburger && mainNav) {
+      hamburger.addEventListener("click", () => {
+        const isOpen = mainNav.classList.toggle("is-open");
+        hamburger.classList.toggle("is-open", isOpen);
+        hamburger.setAttribute("aria-expanded", String(isOpen));
+      });
+      // Close nav when clicking a link
+      mainNav.addEventListener("click", (e) => {
+        if (e.target.closest(".nav-link")) {
+          mainNav.classList.remove("is-open");
+          hamburger.classList.remove("is-open");
+          hamburger.setAttribute("aria-expanded", "false");
+        }
+      });
+      // Close nav on Escape
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && mainNav.classList.contains("is-open")) {
+          mainNav.classList.remove("is-open");
+          hamburger.classList.remove("is-open");
+          hamburger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
 
     // Theme toggle — light is the default, choice persists in localStorage
     initTheme();
@@ -342,9 +383,15 @@ const App = (() => {
       state.user = await apiFetch(API.auth + "/me");
       renderUserChip();
       renderNav();
-    } catch {
-      setToken(null);
-      state.user = null;
+    } catch (err) {
+      if (err.status === 401) {
+        // Token missing/invalid — sign out cleanly with an explanation
+        // instead of silently clearing the token (which made navbar
+        // clicks bounce to login with no warning).
+        handleSessionExpired();
+      }
+      // Any other failure (e.g. API unreachable) keeps the token — the
+      // status pill already reports the API as offline.
     }
   }
 
@@ -357,6 +404,8 @@ const App = (() => {
    */
   function boot(currentPage, { authRequired = true } = {}) {
     if (authRequired && !isAuthed()) {
+      // Remember why we bounced so the login page can explain itself
+      sessionStorage.setItem("threatlens_redirect_reason", "auth_required");
       location.replace("login.html");
       return false;
     }
@@ -367,8 +416,12 @@ const App = (() => {
     }
     activePage = currentPage;
     renderShell(currentPage);
+    guardFileDrops();
     checkApi();
     loadUser();
+    initKeyboardShortcuts();
+    registerServiceWorker();
+    startSessionRefresh();
     return true;
   }
 
@@ -384,6 +437,159 @@ const App = (() => {
       return null;
     }
     return u;
+  }
+
+  /* ---------------- Keyboard shortcuts ---------------- */
+
+  function initKeyboardShortcuts() {
+    document.addEventListener("keydown", (e) => {
+      if (e.shiftKey && e.key === "?") {
+        e.preventDefault();
+        toggleShortcutsOverlay();
+      }
+      if (e.key === "Escape") {
+        const overlay = $("shortcutsOverlay");
+        if (overlay && !overlay.hidden) {
+          overlay.hidden = true;
+          overlay.classList.remove("is-visible");
+        }
+      }
+    });
+  }
+
+  function toggleShortcutsOverlay() {
+    let overlay = $("shortcutsOverlay");
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "shortcutsOverlay";
+      overlay.className = "shortcuts-overlay";
+      overlay.innerHTML = `
+        <div class="shortcuts-overlay__backdrop"></div>
+        <div class="shortcuts-overlay__card panel">
+          <h3 style="font-family:var(--font-display);margin-bottom:16px">Keyboard Shortcuts</h3>
+          <div class="shortcuts-grid">
+            <div class="shortcut-row"><kbd>Shift + ?</kbd><span>Show this help</span></div>
+            <div class="shortcut-row"><kbd>/</kbd><span>Focus URL search</span></div>
+            <div class="shortcut-row"><kbd>Esc</kbd><span>Close overlay / blur input</span></div>
+          </div>
+          <button class="btn btn--ghost" style="margin-top:16px" id="closeShortcuts">Close</button>
+        </div>`;
+      document.body.appendChild(overlay);
+      overlay.querySelector(".shortcuts-overlay__backdrop").addEventListener("click", () => toggleShortcutsOverlay());
+      overlay.querySelector("#closeShortcuts").addEventListener("click", () => toggleShortcutsOverlay());
+    }
+    const isOpen = !overlay.hidden;
+    if (isOpen) {
+      overlay.hidden = true;
+      overlay.classList.remove("is-visible");
+    } else {
+      overlay.hidden = false;
+      requestAnimationFrame(() => overlay.classList.add("is-visible"));
+    }
+  }
+
+  /* ---------------- Shared tab-switching utility ---------------- */
+
+  function initTabs(tabSelector, panelSelector, panelPrefix) {
+    const tabs = Array.from(document.querySelectorAll(tabSelector));
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", String(active));
+        });
+        document.querySelectorAll(panelSelector).forEach((p) => {
+          p.hidden = p.id !== panelPrefix + tab.dataset.tab;
+        });
+      })
+    );
+  }
+
+  /* ---------------- Cross-browser safety: never navigate to dropped files ---------------- */
+
+  /**
+   * Browsers differ on what happens when a file is dropped on a page:
+   * Firefox navigates to the file's file:// URL (then blocks it with a
+   * "Security Error: Content at … may not load or link to file:///" console
+   * error), and other browsers may open the file. Guard at the document
+   * level so a drop anywhere never navigates away — while leaving text
+   * drag-and-drop (inputs, selections) untouched.
+   */
+  function guardFileDrops() {
+    const hasFiles = (e) => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files");
+    document.addEventListener("dragover", (e) => {
+      if (hasFiles(e)) e.preventDefault(); // make the whole page a valid drop target
+    });
+    document.addEventListener("drop", (e) => {
+      if (hasFiles(e)) e.preventDefault(); // stop file:// navigation in every browser
+    });
+  }
+
+  /* ---------------- Error boundary wrapper ---------------- */
+
+  function safeAsync(fn, context) {
+    return async (...args) => {
+      try {
+        return await fn(...args);
+      } catch (err) {
+        console.error(`[${context}] Error:`, err);
+        toast(`${context} failed: ${err.message || "Unknown error"}`);
+        throw err;
+      }
+    };
+  }
+
+  /* ---------------- Skeleton loaders ---------------- */
+
+  function showSkeleton(selector) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.dataset.skeletonHtml = el.innerHTML;
+      el.innerHTML = `<div class="skeleton-wrap"><div class="skeleton-line skeleton-line--lg"></div><div class="skeleton-line"></div><div class="skeleton-line skeleton-line--sm"></div></div>`;
+    });
+  }
+
+  function hideSkeleton(selector) {
+    document.querySelectorAll(selector).forEach((el) => {
+      if (el.dataset.skeletonHtml) {
+        el.innerHTML = el.dataset.skeletonHtml;
+        delete el.dataset.skeletonHtml;
+      }
+    });
+  }
+
+  /* ---------------- Service worker registration ---------------- */
+
+  function registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/static/sw.js").catch(() => {
+        /* SW registration is non-critical */
+      });
+    }
+  }
+
+  /* ---------------- Session refresh ---------------- */
+
+  let sessionRefreshTimer = null;
+
+  function startSessionRefresh() {
+    /* Periodically revalidate the bearer token (tokens expire at 30 days).
+       NOTE: the delay must stay below 2^31-1 ms (~24.8 days). A larger value
+       overflows setTimeout/setInterval's 32-bit delay, wraps negative in the
+       browser and fires continuously — which flooded /api/auth/me and made
+       every page bounce to login. A daily check is plenty here. */
+    const SESSION_CHECK_MS = 24 * 60 * 60 * 1000;
+    clearInterval(sessionRefreshTimer);
+    sessionRefreshTimer = setInterval(async () => {
+      if (!isAuthed()) { clearInterval(sessionRefreshTimer); return; }
+      try {
+        await apiFetch(API.auth + "/me"); /* lightweight auth check */
+      } catch (err) {
+        /* Only a real 401 means the session is gone. A transient failure
+           (offline, server restart) must NOT sign the user out. */
+        if (err.status === 401) handleSessionExpired();
+      }
+    }, SESSION_CHECK_MS);
   }
 
   return {
@@ -411,6 +617,12 @@ const App = (() => {
     renderShell,
     boot,
     ensureAdmin,
+    initTabs,
+    safeAsync,
+    showSkeleton,
+    hideSkeleton,
+    registerServiceWorker,
+    startSessionRefresh,
     CHEVRON_SVG,
   };
 })();

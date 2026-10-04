@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In · ThreatLens</title>
   <meta name="description" content="Sign in to ThreatLens to scan URLs and analyze phishing content." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
   <!-- Ambient background -->
@@ -36,11 +36,11 @@
         <form id="loginForm" class="form" autocomplete="on">
           <div class="field">
             <label class="field-label" for="loginIdentifier">Username or email</label>
-            <input id="loginIdentifier" class="input" type="text" placeholder="alex / alex@mail.com" required />
+            <input id="loginIdentifier" class="input" type="text" placeholder="alex / alex@mail.com" autocomplete="username" required />
           </div>
           <div class="field">
             <label class="field-label" for="loginPassword">Password</label>
-            <input id="loginPassword" class="input" type="password" placeholder="••••••••" required />
+            <input id="loginPassword" class="input" type="password" placeholder="••••••••" autocomplete="current-password" required />
           </div>
           <button class="btn btn--primary btn--block" type="submit" id="loginBtn">
             <span class="btn__label">Sign In</span>
@@ -52,8 +52,8 @@
     </section>
   </main>
 
-  <script src="/static/js/app.js" defer></script>
-  <script src="/static/js/backgrounds.js" defer></script>
-  <script src="/static/js/pages/auth.js" defer></script>
+  <script src="/static/js/app.js?v=4" defer></script>
+  <script src="/static/js/backgrounds.js?v=4" defer></script>
+  <script src="/static/js/pages/auth.js?v=4" defer></script>
 </body>
 </html>

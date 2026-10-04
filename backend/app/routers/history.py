@@ -17,18 +17,24 @@ router = APIRouter(tags=["history"])
 @router.get("/api/history", summary="List the current user's recent URL scans")
 def list_history(
     limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict:
+    total = db.query(ScanRecord).filter(ScanRecord.user_id == user.id).count()
     rows = (
         db.query(ScanRecord)
         .filter(ScanRecord.user_id == user.id)
         .order_by(desc(ScanRecord.created_at))
+        .offset(offset)
         .limit(limit)
         .all()
     )
     return {
-        "total": db.query(ScanRecord).filter(ScanRecord.user_id == user.id).count(),
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "has_more": (offset + limit) < total,
         "items": [
             {
                 "id": r.id,
@@ -72,18 +78,24 @@ def get_history(
 @router.get("/api/phishing-history", summary="List the current user's phishing analyses")
 def list_phishing_history(
     limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict:
+    total = db.query(PhishingAnalysis).filter(PhishingAnalysis.user_id == user.id).count()
     rows = (
         db.query(PhishingAnalysis)
         .filter(PhishingAnalysis.user_id == user.id)
         .order_by(desc(PhishingAnalysis.created_at))
+        .offset(offset)
         .limit(limit)
         .all()
     )
     return {
-        "total": db.query(PhishingAnalysis).filter(PhishingAnalysis.user_id == user.id).count(),
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "has_more": (offset + limit) < total,
         "items": [
             {
                 "id": r.id,

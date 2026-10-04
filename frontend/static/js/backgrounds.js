@@ -385,17 +385,14 @@
   /* ---------------- Boot ---------------- */
 
   function boot() {
-    document.querySelectorAll(".prism-grid").forEach((el) => new PrismGrid(el));
-    document.querySelectorAll("canvas.neon-maze").forEach((el) => new NeonMaze(el));
-
-    // Edge scroll is on by default; set data-edge-scroll="0" on <html> to
-    // disable it for a specific page. Skipped for reduced-motion users.
-    if (
-      document.documentElement.dataset.edgeScroll !== "0" &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      new EdgeScroll();
-    }
+    // Heavy background effects disabled for performance.
+    // To re-enable, uncomment the lines below:
+    // document.querySelectorAll(".prism-grid").forEach((el) => new PrismGrid(el));
+    // document.querySelectorAll("canvas.neon-maze").forEach((el) => new NeonMaze(el));
+    // if (document.documentElement.dataset.edgeScroll !== "0" &&
+    //     !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    //   new EdgeScroll();
+    // }
   }
 
   if (document.readyState === "loading") {

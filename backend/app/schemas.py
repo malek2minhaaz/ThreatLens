@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 CONTENT_TYPES = ("email", "sms", "page_text")
 
@@ -60,6 +60,18 @@ class RegisterRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=24, pattern=r"^[a-zA-Z0-9_]+$")
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=128)
+
+    @field_validator("password")
+    @classmethod
+    def validate_password_strength(cls, v: str) -> str:
+        import re
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Password must contain at least one uppercase letter.")
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Password must contain at least one lowercase letter.")
+        if not re.search(r"\d", v):
+            raise ValueError("Password must contain at least one digit.")
+        return v
 
 
 class LoginRequest(BaseModel):

@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>URL Scanner · ThreatLens</title>
   <meta name="description" content="Scan URLs for heuristics, WHOIS, SSL, redirects and threat intelligence with a unified 0-100 risk score." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
   <!-- Ambient background -->
@@ -32,6 +32,11 @@
           <div class="mode-switch" role="tablist" aria-label="Scan mode">
             <button type="button" class="mode-switch__btn is-active" role="tab" aria-selected="true" data-mode="single">Single URL</button>
             <button type="button" class="mode-switch__btn" role="tab" aria-selected="false" data-mode="bulk">Bulk scan</button>
+          </div>
+
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap">
+            <button class="compare-btn" id="compareModeBtn" type="button" title="Compare two scan results side by side">⚖️ Compare mode</button>
+            <button class="compare-btn" id="csvImportBtn" type="button" title="Import URLs from a CSV file">📄 CSV import</button>
           </div>
 
           <form id="scanForm" class="scan-form" autocomplete="off">
@@ -72,6 +77,26 @@
               <span class="bulk-form__hint">Scans run in parallel · every result is saved to your History</span>
             </div>
           </form>
+        </div>
+
+        <!-- Compare mode -->
+        <div id="comparePanel" hidden>
+          <div class="page-head">
+            <p class="eyebrow">⚖️ Compare scans</p>
+            <h2 class="section-title">Side-by-side comparison</h2>
+          </div>
+          <div class="comparison-grid" id="compareGrid"></div>
+        </div>
+
+        <!-- CSV import -->
+        <div id="csvImportPanel" class="panel" hidden style="margin-bottom:22px">
+          <h3 class="panel-title">Import URLs from CSV</h3>
+          <p class="result-meta">Upload a CSV file with a URL column. The scanner will extract all URLs and start a bulk scan.</p>
+          <div class="import-drop" id="importDrop">
+            <input type="file" accept=".csv,.txt" id="csvFileInput" />
+            <p>Drop a CSV file here or <strong>click to browse</strong></p>
+          </div>
+          <div id="csvPreview" hidden style="margin-top:14px"></div>
         </div>
 
         <!-- Scan results -->
@@ -210,8 +235,8 @@
     </section>
   </main>
 
-  <script src="/static/js/app.js" defer></script>
-  <script src="/static/js/backgrounds.js" defer></script>
-  <script src="/static/js/pages/scanner.js" defer></script>
+  <script src="/static/js/app.js?v=4" defer></script>
+  <script src="/static/js/backgrounds.js?v=4" defer></script>
+  <script src="/static/js/pages/scanner.js?v=4" defer></script>
 </body>
 </html>

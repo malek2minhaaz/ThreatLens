@@ -1,0 +1,118 @@
+<mxfile host="app.diagrams.net" agent="ThreatLens documentation generator" version="24.7.8">
+  <diagram id="threatlens-url-scan-activity" name="Activity Diagram - URL Scan">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="ThreatLens - URL Scan Activity Diagram" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#1F2937;" vertex="1" parent="1">
+          <mxGeometry x="430" y="20" width="700" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="clientLane" value="Client (dashboard, browser extension, or API client)" style="swimlane;horizontal=0;startSize=28;html=1;rounded=0;fillColor=#F9FAFB;swimlaneFillColor=#DBEAFE;strokeColor=#60A5FA;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="260" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="apiLane" value="ThreatLens API" style="swimlane;horizontal=0;startSize=28;html=1;rounded=0;fillColor=#F9FAFB;swimlaneFillColor=#DCFCE7;strokeColor=#4ADE80;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="70" width="350" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="pipelineLane" value="Scan services" style="swimlane;horizontal=0;startSize=28;html=1;rounded=0;fillColor=#FFFBEB;swimlaneFillColor=#FEF3C7;strokeColor=#F59E0B;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="70" width="530" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="dataLane" value="Database" style="swimlane;horizontal=0;startSize=28;html=1;rounded=0;fillColor=#FAF5FF;swimlaneFillColor=#E9D5FF;strokeColor=#A855F7;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="70" width="260" height="930" as="geometry" />
+        </mxCell>
+
+        <mxCell id="start" value="" style="ellipse;html=1;aspect=fixed;fillColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="150" y="105" width="24" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="submit" value="Submit POST /api/scan-url&lt;br&gt;with URL and bearer token" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="85" y="155" width="155" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="authenticate" value="Resolve bearer token&lt;br&gt;and expiry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="412" y="155" width="165" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="validToken" value="Valid token?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="442" y="245" width="105" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="unauth" value="Return 401&lt;br&gt;Not authenticated" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="345" y="330" width="135" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="limit" value="Apply per-user scan&lt;br&gt;rate limit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="405" width="155" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="allowed" value="Allowed?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="515" y="490" width="105" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="throttled" value="Return 429&lt;br&gt;Too many requests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="345" y="510" width="140" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="parse" value="Parse and normalize URL&lt;br&gt;(HTTP/HTTPS only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="870" y="405" width="165" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="validUrl" value="Valid URL?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="900" y="490" width="105" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="badUrl" value="Return 400&lt;br&gt;Invalid URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="735" y="590" width="135" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fork" value="" style="shape=rectangle;html=1;fillColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="800" y="595" width="320" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="heuristics" value="Run offline heuristics&lt;br&gt;(brand, TLD, structure)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="715" y="650" width="145" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="metadata" value="Inspect metadata&lt;br&gt;(WHOIS, SSL, HTTP)&lt;br&gt;with SSRF guards" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="885" y="640" width="145" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="intel" value="Query configured providers&lt;br&gt;(VirusTotal, Google Safe&lt;br&gt;Browsing, PhishTank)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1055" y="640" width="145" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="join" value="" style="shape=rectangle;html=1;fillColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="800" y="755" width="320" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="score" value="Combine findings; calculate&lt;br&gt;0-100 safety score and verdict" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D97706;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="875" y="800" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="persist" value="Persist ScanRecord&lt;br&gt;(report summary + findings)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9333EA;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="800" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="response" value="Return result with scan_id,&lt;br&gt;score, verdict and findings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="75" y="890" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="endOuter" value="" style="ellipse;html=1;aspect=fixed;fillColor=#FFFFFF;strokeColor=#111827;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="150" y="965" width="28" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="endInner" value="" style="ellipse;html=1;aspect=fixed;fillColor=#111827;strokeColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="157" y="972" width="14" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="External-provider failures are returned as informational findings; the overall scan is capped by MAX_SCAN_SECONDS." style="shape=note;whiteSpace=wrap;html=1;fillColor=#FEFCE8;strokeColor=#CA8A04;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="350" width="135" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="start" target="submit"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="submit" target="authenticate"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="authenticate" target="validToken"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="No" style="endArrow=block;html=1;strokeColor=#DC2626;fontSize=11;" edge="1" parent="1" source="validToken" target="unauth"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="Yes" style="endArrow=block;html=1;strokeColor=#374151;fontSize=11;" edge="1" parent="1" source="validToken" target="limit"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="limit" target="allowed"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="No" style="endArrow=block;html=1;strokeColor=#DC2626;fontSize=11;" edge="1" parent="1" source="allowed" target="throttled"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="Yes" style="endArrow=block;html=1;strokeColor=#374151;fontSize=11;" edge="1" parent="1" source="allowed" target="parse"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="695" y="522" /><mxPoint x="695" y="432" /></Array></mxGeometry></mxCell>
+        <mxCell id="e9" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="parse" target="validUrl"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" value="No" style="endArrow=block;html=1;strokeColor=#DC2626;fontSize=11;" edge="1" parent="1" source="validUrl" target="badUrl"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" value="Yes" style="endArrow=block;html=1;strokeColor=#374151;fontSize=11;" edge="1" parent="1" source="validUrl" target="fork"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="952" y="595" /></Array></mxGeometry></mxCell>
+        <mxCell id="e12" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="fork" target="heuristics"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="fork" target="metadata"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e14" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="fork" target="intel"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e15" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="heuristics" target="join"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e16" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="metadata" target="join"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e17" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="intel" target="join"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e18" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="join" target="score"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e19" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="score" target="persist"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e20" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="persist" target="response"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1368" y="920" /><mxPoint x="250" y="920" /></Array></mxGeometry></mxCell>
+        <mxCell id="e21" style="endArrow=block;html=1;strokeColor=#374151;" edge="1" parent="1" source="response" target="endOuter"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e22" style="endArrow=block;html=1;strokeColor=#DC2626;dashed=1;" edge="1" parent="1" source="unauth" target="endOuter"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="275" y="358" /><mxPoint x="275" y="980" /></Array></mxGeometry></mxCell>
+        <mxCell id="e23" style="endArrow=block;html=1;strokeColor=#DC2626;dashed=1;" edge="1" parent="1" source="throttled" target="endOuter"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="275" y="538" /><mxPoint x="275" y="980" /></Array></mxGeometry></mxCell>
+        <mxCell id="e24" style="endArrow=block;html=1;strokeColor=#DC2626;dashed=1;" edge="1" parent="1" source="badUrl" target="endOuter"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="700" y="618" /><mxPoint x="700" y="980" /><mxPoint x="178" y="980" /></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

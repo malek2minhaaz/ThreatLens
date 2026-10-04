@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ThreatLens — Threat Detection & URL Scanner</title>
   <meta name="description" content="Scan URLs, analyze phishing content, and get unified risk scoring. Know if that link is safe before you click." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E" />
   <script>document.documentElement.dataset.theme = localStorage.getItem("threatlens_theme") || "light";</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/style.css?v=4" />
 </head>
 <body>
   <!-- Ambient background: prism grid (subtle animated grid) -->
@@ -28,6 +28,11 @@
         </span>
         <span class="brand__name">Threat<span class="brand__accent">Lens</span></span>
       </a>
+      <nav class="site-nav" style="display:flex;margin-left:auto">
+        <a class="nav-link" href="#features">Features</a>
+        <a class="nav-link" href="login.html">Sign In</a>
+        <a class="nav-link" href="register.html">Sign Up</a>
+      </nav>
       <button class="icon-btn" id="themeToggle" title="Switch theme" aria-label="Switch between light and dark theme"></button>
     </div>
   </header>
@@ -91,7 +96,7 @@
     </section>
 
     <!-- ======================= FEATURES ======================= -->
-    <section class="landing-features container">
+    <section class="landing-features container" id="features">
       <h2 class="landing-features__title">Everything you need to stay safe online</h2>
       <div class="landing-features__grid">
         <div class="panel feature-card">
@@ -155,6 +160,6 @@
     })();
   </script>
 
-  <script src="/static/js/backgrounds.js" defer></script>
+  <script src="/static/js/backgrounds.js?v=4" defer></script>
 </body>
 </html>

@@ -10,6 +10,7 @@ from ..database import get_db
 from ..dependencies import get_current_admin
 from ..models import AuthToken, PhishingAnalysis, ScanRecord, User, utcnow
 from ..schemas import AdminUserUpdate
+from .audit import log_action
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -163,6 +164,7 @@ def update_user(
         raise HTTPException(status_code=400, detail="You cannot demote your own account.")
     if payload.is_admin is not None:
         user.is_admin = payload.is_admin
+        log_action(db, admin, f"user.{'promote' if payload.is_admin else 'demote'}", f"{user.username}")
     if payload.display_name is not None:
         user.display_name = payload.display_name.strip() or None
 
@@ -197,6 +199,7 @@ def delete_user(
     db.query(AuthToken).filter(AuthToken.user_id == user_id).delete(synchronize_session=False)
     db.query(ScanRecord).filter(ScanRecord.user_id == user_id).delete(synchronize_session=False)
     db.query(PhishingAnalysis).filter(PhishingAnalysis.user_id == user_id).delete(synchronize_session=False)
+    log_action(db, admin, "user.delete", f"{user.username}")
     db.delete(user)
     db.commit()
     return {"detail": f"User {user.username} deleted."}

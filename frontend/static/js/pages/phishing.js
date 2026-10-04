@@ -8,21 +8,9 @@
   if (!App.isAuthed()) return; // app.js is already redirecting
   const { $ } = App;
 
-  /* ---------------- Tab switching ---------------- */
+  /* ---------------- Tab switching (using shared utility) ---------------- */
 
-  const tabs = Array.from(document.querySelectorAll(".tool-tab"));
-  tabs.forEach((tab) =>
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => {
-        const active = t === tab;
-        t.classList.toggle("is-active", active);
-        t.setAttribute("aria-selected", String(active));
-      });
-      document.querySelectorAll(".tool-panel").forEach((p) => {
-        p.hidden = p.id !== "panel-" + tab.dataset.tab;
-      });
-    })
-  );
+  App.initTabs(".tool-tab", ".tool-panel", "panel-");
 
   /* ---------------- Shared: watchlist matches ---------------- */
 

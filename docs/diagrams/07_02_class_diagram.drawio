@@ -1,0 +1,125 @@
+<mxfile host="app.diagrams.net" agent="ThreatLens documentation generator" version="24.7.8">
+  <diagram id="threatlens-class" name="Class Diagram">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="clsUser" value="&lt;b&gt;User&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- username: String(24) &lt;i&gt;«unique»&lt;/i&gt;&lt;br/&gt;- email: String(254) &lt;i&gt;«unique»&lt;/i&gt;&lt;br/&gt;- password_hash: String(255)&lt;br/&gt;- display_name: String(50)?&lt;br/&gt;- is_admin: boolean = false&lt;br/&gt;- created_at: DateTime&lt;hr/&gt;+ public_name(): str" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="clsAuthToken" value="&lt;b&gt;AuthToken&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- token: String(64) &lt;i&gt;«unique»&lt;/i&gt;&lt;br/&gt;- user_id: int → users.id&lt;br/&gt;- created_at: DateTime&lt;br/&gt;- expires_at: DateTime&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="clsAPIKey" value="&lt;b&gt;APIKey&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int → users.id&lt;br/&gt;- key_hash: String(128) &lt;i&gt;«unique»&lt;/i&gt;&lt;br/&gt;- name: String(100) = 'default'&lt;br/&gt;- prefix: String(8)&lt;br/&gt;- is_active: boolean = true&lt;br/&gt;- last_used_at: DateTime?&lt;br/&gt;- created_at: DateTime&lt;br/&gt;- expires_at: DateTime?&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="300" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="clsWatchlist" value="&lt;b&gt;WatchlistEntry&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int → users.id&lt;br/&gt;- kind: String(10) {sender|domain|url}&lt;br/&gt;- value: String(2048)&lt;br/&gt;- note: String(200)?&lt;br/&gt;- created_at: DateTime&lt;br/&gt;- last_seen_at: DateTime?&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="740" width="300" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="clsWebhook" value="&lt;b&gt;Webhook&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int → users.id&lt;br/&gt;- url: String(2048)&lt;br/&gt;- secret: String(64)&lt;br/&gt;- events: Text (JSON array)&lt;br/&gt;- is_active: boolean = true&lt;br/&gt;- last_triggered_at: DateTime?&lt;br/&gt;- created_at: DateTime&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="950" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="clsScanRecord" value="&lt;b&gt;ScanRecord&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int? → users.id&lt;br/&gt;- url: String(2048)&lt;br/&gt;- risk_score: int (0..100)&lt;br/&gt;- verdict: String(50)&lt;br/&gt;- summary: Text (JSON)&lt;br/&gt;- findings: Text (JSON)&lt;br/&gt;- created_at: DateTime&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="60" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="clsPhishingAnalysis" value="&lt;b&gt;PhishingAnalysis&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int? → users.id&lt;br/&gt;- content_type: String(50) = 'email'&lt;br/&gt;- content_preview: String(500)&lt;br/&gt;- phishing_score: int (0..100)&lt;br/&gt;- verdict: String(50)&lt;br/&gt;- flags: Text (JSON)&lt;br/&gt;- created_at: DateTime&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="300" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="clsAuditLog" value="&lt;b&gt;AuditLog&lt;/b&gt;&lt;hr/&gt;- id: int &lt;i&gt;«PK»&lt;/i&gt;&lt;br/&gt;- user_id: int? → users.id&lt;br/&gt;- action: String(100)&lt;br/&gt;- detail: Text?&lt;br/&gt;- ip_address: String(45)?&lt;br/&gt;- created_at: DateTime&lt;hr/&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="540" width="300" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="clsParsedUrl" value="&lt;b&gt;ParsedUrl&lt;/b&gt; «value object»&lt;hr/&gt;- raw: str&lt;br/&gt;- normalized: str&lt;br/&gt;- scheme: str&lt;br/&gt;- host: str&lt;br/&gt;- port: int?&lt;br/&gt;- path: str&lt;br/&gt;- query: str&lt;br/&gt;- fragment: str&lt;br/&gt;- is_ip: bool = false&lt;br/&gt;- ip_version: int?&lt;br/&gt;- sld: str&lt;br/&gt;- tld: str&lt;br/&gt;- registrable: str&lt;br/&gt;- subdomain: str&lt;br/&gt;- url_length: int&lt;br/&gt;- has_https: bool&lt;br/&gt;- default_port: bool&lt;hr/&gt;+ to_dict(): dict" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="40" width="290" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="clsRiskReport" value="&lt;b&gt;RiskReport&lt;/b&gt; «dataclass»&lt;hr/&gt;- score: int&lt;br/&gt;- verdict: String&lt;br/&gt;- risk_level: String&lt;br/&gt;- findings: list[dict]&lt;br/&gt;- category_totals: dict[str, int]&lt;hr/&gt;+ to_dict(): dict" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="450" width="290" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="clsScanner" value="&lt;b&gt;ScannerService&lt;/b&gt;&lt;hr/&gt;+ CATEGORY_LABELS: dict&lt;br/&gt;+ InvalidURLError(ValueError)&lt;hr/&gt;+ scan_url(raw_url: str): dict&lt;br/&gt;- _finalize_findings(findings: list): list" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="660" width="290" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="clsHeuristics" value="&lt;b&gt;HeuristicsService&lt;/b&gt;&lt;hr/&gt;+ SUSPICIOUS_TLDS: set&lt;br/&gt;+ POPULAR_BRANDS: dict&lt;br/&gt;+ URL_SHORTENERS: set&lt;br/&gt;+ CREDENTIAL_HINTS: list&lt;hr/&gt;+ run_heuristics(p: ParsedUrl): list[dict]&lt;br/&gt;+ check_typosquatting(p): dict?&lt;br/&gt;+ check_suspicious_tld(p): dict?&lt;br/&gt;+ check_high_entropy(p): dict?&lt;br/&gt;+ check_structure(p): list[dict]&lt;br/&gt;+ levenshtein(a, b, max_dist): int" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="840" width="290" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="clsMetadata" value="&lt;b&gt;MetadataService&lt;/b&gt;&lt;hr/&gt;+ fetch_whois(p: ParsedUrl): dict&lt;br/&gt;+ fetch_ssl(p: ParsedUrl): dict&lt;br/&gt;+ fetch_http(p: ParsedUrl): dict&lt;br/&gt;+ domain_age_finding(whois): dict?&lt;br/&gt;+ ssl_finding(ssl_info, p): dict?&lt;br/&gt;+ http_finding(http): list[dict]&lt;br/&gt;- _blocked_target(host): str? «SSRF guard»" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="760" width="300" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="clsThreatIntel" value="&lt;b&gt;ThreatIntelService&lt;/b&gt;&lt;hr/&gt;+ check_virustotal(url): dict&lt;br/&gt;+ check_google_safe_browsing(url): dict&lt;br/&gt;+ check_phishtank(url): dict&lt;br/&gt;+ run_threat_intel(p: ParsedUrl): dict&lt;br/&gt;+ threat_intel_findings(intel): list[dict]&lt;br/&gt;+ url_id(url): str" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="980" width="300" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="clsRiskScoring" value="&lt;b&gt;RiskScoringEngine&lt;/b&gt;&lt;hr/&gt;+ VERDICT_LEVELS: list&lt;hr/&gt;+ compute_risk(findings: list[dict]): RiskReport&lt;br/&gt;+ classify(score: int): (verdict, level)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1190" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="clsPhishingAnalyzer" value="&lt;b&gt;PhishingAnalyzer&lt;/b&gt;&lt;hr/&gt;+ URGENCY_KEYWORDS: list&lt;br/&gt;+ THREAT_KEYWORDS: list&lt;br/&gt;+ FINANCIAL_KEYWORDS: list&lt;br/&gt;+ CREDENTIAL_KEYWORDS: list&lt;br/&gt;+ GENERIC_GREETINGS: list&lt;br/&gt;+ SUSPICIOUS_SENDER_PATTERNS: list&lt;hr/&gt;+ analyze_phishing(content, content_type): dict" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="1090" width="290" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="clsSecurity" value="&lt;b&gt;SecurityService&lt;/b&gt;&lt;hr/&gt;+ hash_password(password): str&lt;br/&gt;+ verify_password(password, stored): bool&lt;br/&gt;+ new_bearer_token(): str&lt;br/&gt;«PBKDF2-HMAC-SHA256, 210k iters»" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="1320" width="290" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="clsRateLimit" value="&lt;b&gt;SlidingWindowLimiter&lt;/b&gt;&lt;hr/&gt;- max_attempts: int&lt;br/&gt;- window_seconds: int&lt;br/&gt;- _hits: dict[str, list[float]]&lt;br/&gt;- _lock: Lock&lt;hr/&gt;+ allow(key: str): bool&lt;br/&gt;+ reset(key: str)" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1180" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="clsWatchlistSvc" value="&lt;b&gt;WatchlistService&lt;/b&gt;&lt;hr/&gt;+ extract_links(text): list[str]&lt;br/&gt;+ extract_sender_domains(text): list[str]&lt;br/&gt;+ match_watchlist(db, user_id, values): list[dict]" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=8;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1370" width="300" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="rel1" value="1        0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsUser" target="clsAuthToken">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel2" value="1        0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsUser" target="clsAPIKey">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel3" value="1        0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsUser" target="clsWatchlist">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel4" value="1        0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsUser" target="clsWebhook">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel5" value="0..1     0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=1;exitY=0.75;entryX=0;entryY=0.3;" edge="1" parent="1" source="clsUser" target="clsScanRecord">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel6" value="0..1     0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=1;exitY=0.75;entryX=0;entryY=0.3;" edge="1" parent="1" source="clsUser" target="clsPhishingAnalysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel7" value="0..1     0..*" style="endArrow=none;startArrow=none;html=1;strokeColor=#4D4D4D;fontSize=11;exitX=1;exitY=0.75;entryX=0;entryY=0.3;" edge="1" parent="1" source="clsUser" target="clsAuditLog">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep1" value="«create»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="clsScanner" target="clsParsedUrl">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep2" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsScanner" target="clsHeuristics">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep3" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsScanner" target="clsMetadata">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep4" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.75;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="clsScanner" target="clsThreatIntel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep5" value="uses" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0;exitY=0.75;entryX=1;entryY=0.25;" edge="1" parent="1" source="clsScanner" target="clsRiskScoring">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="880" />
+              <mxPoint x="1060" y="1230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep6" value="«create»" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="clsRiskScoring" target="clsRiskReport">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep7" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="clsPhishingAnalyzer" target="clsPhishingAnalysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dep8" value="consumes findings of" style="endArrow=open;endFill=0;dashed=1;html=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.25;entryX=0;entryY=0.5;" edge="1" parent="1" source="clsRiskScoring" target="clsHeuristics">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="1218" />
+              <mxPoint x="1020" y="940" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="note1" value="&lt;b&gt;Note:&lt;/b&gt; Services are implemented as stateless Python modules (module-level functions). Classes here represent the logical service layer of backend/app/services/*.&lt;br/&gt;&lt;br/&gt;«PK» = primary key, «unique» = unique index.&lt;br/&gt;JSON-typed columns (summary, findings, flags, events) are stored as TEXT and serialized/deserialized at the router layer." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1440" y="700" width="230" height="160" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

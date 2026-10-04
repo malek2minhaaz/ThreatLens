@@ -89,3 +89,47 @@ class PhishingAnalysis(Base):
     verdict: Mapped[str] = mapped_column(String(50))
     flags: Mapped[str] = mapped_column(Text, default="[]")  # JSON: itemized flags
     created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow, index=True)
+
+
+class AuditLog(Base):
+    """Platform-wide audit trail for admin actions."""
+
+    __tablename__ = "audit_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), index=True, nullable=True)
+    action: Mapped[str] = mapped_column(String(100), nullable=False)  # e.g. user.promote, scan.complete
+    detail: Mapped[str | None] = mapped_column(Text, nullable=True)  # JSON or human-readable
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow, index=True)
+
+
+class APIKey(Base):
+    """API keys for programmatic access."""
+
+    __tablename__ = "api_keys"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
+    key_hash: Mapped[str] = mapped_column(String(128), unique=True, index=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(100), default="default")
+    prefix: Mapped[str] = mapped_column(String(8), nullable=False)  # first 8 chars for display
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    last_used_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+class Webhook(Base):
+    """Webhook subscriptions for notifications."""
+
+    __tablename__ = "webhooks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
+    url: Mapped[str] = mapped_column(String(2048), nullable=False)
+    secret: Mapped[str] = mapped_column(String(64), nullable=False)
+    events: Mapped[str] = mapped_column(Text, default="[\"scan.dangerous\"]")  # JSON array of event types
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    last_triggered_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=_utcnow)
